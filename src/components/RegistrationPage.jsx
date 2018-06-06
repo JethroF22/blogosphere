@@ -19,10 +19,10 @@ class RegistrationPage extends Component {
           <label htmlFor="email">Email: </label>
           <input type="text" name="email" />
           <br />
-          <label htmlFor="password">Email: </label>
+          <label htmlFor="password">Password: </label>
           <input type="password" name="password" />
           <br />
-          <label htmlFor="confirmPassword">Email: </label>
+          <label htmlFor="confirmPassword">Confirm Password: </label>
           <input type="password" name="confirmPassword" />
           <br />
         </form>
