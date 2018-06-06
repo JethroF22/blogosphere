@@ -2,6 +2,6 @@ import "babel-polyfill";
 import React from "react";
 import ReactDOM from "react-dom";
 
-const template = <div>Hello World!</div>;
+import AppRouter from "./routes/AppRouter";
 
-ReactDOM.render(template, document.getElementById("app"));
+ReactDOM.render(<AppRouter />, document.getElementById("app"));
