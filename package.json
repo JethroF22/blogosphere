@@ -4,8 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev-server": "webpack-dev-server --mode development",
-    "build": "webpack --mode production --inline --progress"
+    "dev-server": "set NODE_ENV=development webpack-dev-server --mode development",
+    "build": "webpack --mode production --inline --progress",
+    "test": "set NODE_ENV=test&& mocha server/**/*.test.js",
+    "test-watch": "nodemon --exec \"npm test\""
   },
   "dependencies": {
     "babel-core": "^6.26.3",
@@ -15,6 +17,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "bcryptjs": "^2.4.3",
     "css-loader": "^0.28.11",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
@@ -32,10 +35,12 @@
     "redux-thunk": "^2.3.0",
     "sass-loader": "^7.0.3",
     "style-loader": "^0.21.0",
+    "validator": "^10.3.0",
     "webpack": "^4.11.1",
     "webpack-cli": "^3.0.2"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-to-json": "^3.3.4",
