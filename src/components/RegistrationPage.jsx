@@ -1,11 +1,17 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import * as _ from "lodash";
+
+import { validateRegistrationForm as validateForm } from "../utils/forms";
+import { startRegistration } from "../actions/auth";
 
 class RegistrationPage extends Component {
   state = {
     password: "",
     confirmPassword: "",
     username: "",
-    email: ""
+    email: "",
+    errors: {}
   };
 
   onEmailChange = e => {
@@ -36,11 +42,25 @@ class RegistrationPage extends Component {
     }));
   };
 
+  onSubmit = e => {
+    e.preventDefault();
+    const errors = validateForm(this.state);
+    this.setState(() => ({
+      errors
+    }));
+    if (Object.keys(errors).length === 0) {
+      console.log("Valid form data");
+      this.props.register(
+        _.pick(this.state, ["password", "username", "email"])
+      );
+    }
+  };
+
   render() {
     return (
       <div>
         <h1>Create An Account</h1>
-        <form>
+        <form onSubmit={this.onSubmit}>
           <label htmlFor="username">Username: </label>
           <input
             type="text"
@@ -48,6 +68,7 @@ class RegistrationPage extends Component {
             value={this.state.username}
             onChange={this.onUsernameChange}
           />
+          {this.state.errors.username && <p>{this.state.errors.username}</p>}
           <br />
           <label htmlFor="email">Email: </label>
           <input
@@ -56,6 +77,8 @@ class RegistrationPage extends Component {
             value={this.state.email}
             onChange={this.onEmailChange}
           />
+          {this.state.errors.email && <p>{this.state.errors.email}</p>}
+
           <br />
           <label htmlFor="password">Password: </label>
           <input
@@ -64,6 +87,8 @@ class RegistrationPage extends Component {
             value={this.state.password}
             onChange={this.onPasswordChange}
           />
+          {this.state.errors.password && <p>{this.state.errors.password}</p>}
+
           <br />
           <label htmlFor="confirmPassword">Confirm Password: </label>
           <input
@@ -72,6 +97,10 @@ class RegistrationPage extends Component {
             value={this.state.confirmPassword}
             onChange={this.onConfirmPasswordChange}
           />
+          {this.state.errors.confirmPassword && (
+            <p>{this.state.errors.confirmPassword}</p>
+          )}
+
           <br />
           <button type="submit">Submit</button>
         </form>
@@ -80,4 +109,11 @@ class RegistrationPage extends Component {
   }
 }
 
-export default RegistrationPage;
+const mapDispatchToProps = dispatch => ({
+  register: userCredentials => dispatch(startRegistration(userCredentials))
+});
+
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(RegistrationPage);

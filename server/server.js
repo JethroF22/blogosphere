@@ -9,11 +9,12 @@ if (env === "development") {
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
-
+const cors = require("cors");
 const { mongoose } = require("./db/mongoose");
 const auth = require("./routes/auth");
 
 const app = express();
+app.use(cors());
 const publicPath = path.join(__dirname, "..", "public");
 app.use(bodyParser.json());
 app.use(express.static(publicPath));
