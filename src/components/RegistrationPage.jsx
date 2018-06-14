@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 
+import { validateRegistrationForm as validateForm } from "../utils/forms";
+
 class RegistrationPage extends Component {
   state = {
     password: "",
     confirmPassword: "",
     username: "",
-    email: ""
+    email: "",
+    errors: {}
   };
 
   onEmailChange = e => {
@@ -36,11 +39,17 @@ class RegistrationPage extends Component {
     }));
   };
 
+  onSubmit = e => {
+    e.preventDefault();
+    const errors = validateForm(this.state);
+    console.log(errors);
+  };
+
   render() {
     return (
       <div>
         <h1>Create An Account</h1>
-        <form>
+        <form onSubmit={this.onSubmit}>
           <label htmlFor="username">Username: </label>
           <input
             type="text"
