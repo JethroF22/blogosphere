@@ -2,10 +2,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as _ from "lodash";
 
+import { startAuthentication } from "../actions/auth";
+
 class LoginPage extends Component {
   state = {
     password: "",
-    email: ""
+    email: "",
+    error: ""
   };
 
   onEmailChange = e => {
@@ -22,11 +25,26 @@ class LoginPage extends Component {
     }));
   };
 
+  onSubmit = e => {
+    e.preventDefault();
+
+    this.props
+      .login(_.pick(this.state, ["email", "password"]))
+      .then(token => {
+        this.setState(() => ({ error: "" }));
+        localStorage.setItem("token", token);
+      })
+      .catch(error => {
+        this.setState(() => ({ error: "Invalid email/password combination" }));
+      });
+  };
+
   render() {
     return (
       <div>
-        <h1>Create An Account</h1>
-        <form>
+        <h1>Login</h1>
+        <form onSubmit={this.onSubmit}>
+          {this.state.error && <p>{this.state.error}</p>}
           <label htmlFor="email">Email: </label>
           <input
             type="text"
@@ -49,6 +67,11 @@ class LoginPage extends Component {
     );
   }
 }
+
+const mapDispatchToProps = dispatch => ({
+  login: userCredentials =>
+    dispatch(startAuthentication(userCredentials, "login "))
+});
 
 export default connect(
   undefined,
