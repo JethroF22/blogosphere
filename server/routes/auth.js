@@ -10,12 +10,15 @@ router.post("/register", (req, res) => {
 
   const user = new User(credentials);
   const token = user.generateAuthToken();
+  const responseObject = {
+    token,
+    username: credentials.username,
+    email: credentials.email
+  };
   user
     .save()
     .then(() => {
-      res
-        .header("token", token)
-        .send(_.pick(credentials, ["username", "email"]));
+      res.send(responseObject);
     })
     .catch(error => {
       res.status(400).send({ error });
