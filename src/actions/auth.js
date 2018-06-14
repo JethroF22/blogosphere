@@ -7,9 +7,9 @@ export const setUserDetails = ({ username, email }) => ({
   email
 });
 
-export const startRegistration = userCredentials => {
+export const startAuthentication = (userCredentials, type) => {
   return dispatch => {
-    const url = `${process.env.API_URL}auth/register`;
+    const url = `${process.env.API_URL}auth/${type}`;
     return axios({
       url,
       data: userCredentials,
@@ -17,13 +17,13 @@ export const startRegistration = userCredentials => {
     })
       .then(response => {
         const data = response.data;
-        localStorage.setItem("token", data.token);
         dispatch(
           setUserDetails({ username: data.username, email: data.email })
         );
+        return data.token;
       })
       .catch(error => {
-        console.log(error);
+        return Promise.reject();
       });
   };
 };
