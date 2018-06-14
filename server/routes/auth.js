@@ -25,4 +25,18 @@ router.post("/register", (req, res) => {
     });
 });
 
+router.post("/login", (req, res) => {
+  const credentials = _.pick(req.body, ["password", "email"]);
+
+  User.findByCredentials({ ...credentials })
+    .then(user => {
+      res.send({
+        token: user.token,
+        username: user.username,
+        email: user.email
+      });
+    })
+    .catch(err => res.status(400).send());
+});
+
 module.exports = router;
