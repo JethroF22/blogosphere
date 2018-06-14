@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import * as _ from "lodash";
 
 import { validateRegistrationForm as validateForm } from "../utils/forms";
-import { startRegistration } from "../actions/auth";
+import { startAuthentication } from "../actions/auth";
 
 class RegistrationPage extends Component {
   state = {
@@ -61,6 +61,9 @@ class RegistrationPage extends Component {
       <div>
         <h1>Create An Account</h1>
         <form onSubmit={this.onSubmit}>
+          {this.state.errors.authentication && (
+            <p>{this.state.errors.authentication}</p>
+          )}
           <label htmlFor="username">Username: </label>
           <input
             type="text"
@@ -110,7 +113,8 @@ class RegistrationPage extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  register: userCredentials => dispatch(startRegistration(userCredentials))
+  register: userCredentials =>
+    dispatch(startAuthentication(userCredentials, "register"))
 });
 
 export default connect(

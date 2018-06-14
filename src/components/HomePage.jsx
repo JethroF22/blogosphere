@@ -5,7 +5,7 @@ const HomePage = () => (
   <div>
     <h1>Welcome to Blogosphere!</h1>
     <Link to="/register">Create Account</Link>
-    <button>Log In</button>
+    <Link to="/login">Login</Link>
   </div>
 );
 
