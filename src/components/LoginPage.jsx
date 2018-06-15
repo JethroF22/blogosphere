@@ -4,7 +4,7 @@ import _ from "lodash";
 
 import { startAuthentication } from "../actions/auth";
 
-class LoginPage extends Component {
+export class LoginPage extends Component {
   state = {
     password: "",
     email: "",
