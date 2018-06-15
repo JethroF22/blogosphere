@@ -32,3 +32,55 @@ test("Should not submit form with invalid data", () => {
     email: "Not a valid email"
   });
 });
+
+test("Should set username on input change", () => {
+  const value = "user";
+  wrapper
+    .find("input")
+    .at(0)
+    .simulate("change", {
+      target: {
+        value
+      }
+    });
+  expect(wrapper.state("username")).toBe(value);
+});
+
+test("Should set email on input change", () => {
+  const value = "test@gmail.com";
+  wrapper
+    .find("input")
+    .at(1)
+    .simulate("change", {
+      target: {
+        value
+      }
+    });
+  expect(wrapper.state("email")).toBe(value);
+});
+
+test("Should set password on input change", () => {
+  const value = "password";
+  wrapper
+    .find("input")
+    .at(2)
+    .simulate("change", {
+      target: {
+        value
+      }
+    });
+  expect(wrapper.state("password")).toBe(value);
+});
+
+test("Should set confirmPassword on input change", () => {
+  const value = "password";
+  wrapper
+    .find("input")
+    .at(3)
+    .simulate("change", {
+      target: {
+        value
+      }
+    });
+  expect(wrapper.state("confirmPassword")).toBe(value);
+});
