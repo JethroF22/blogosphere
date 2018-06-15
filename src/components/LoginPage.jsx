@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import * as _ from "lodash";
+import _ from "lodash";
 
 import { startAuthentication } from "../actions/auth";
 

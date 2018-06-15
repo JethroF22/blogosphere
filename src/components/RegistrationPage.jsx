@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import * as _ from "lodash";
+import _ from "lodash";
 
 import { validateRegistrationForm as validateForm } from "../utils/forms";
 import { startAuthentication } from "../actions/auth";
 
-class RegistrationPage extends Component {
+export class RegistrationPage extends Component {
   state = {
     password: "",
     confirmPassword: "",

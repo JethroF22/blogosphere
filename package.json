@@ -6,8 +6,9 @@
   "scripts": {
     "dev-server": "webpack-dev-server --mode development",
     "build": "webpack --mode production --inline --progress",
-    "test": "set NODE_ENV=test&& mocha server/**/*.test.js",
-    "test-watch": "nodemon --exec \"npm test\""
+    "test-express": "cross-env NODE_ENV=test mocha server/**/*.test.js",
+    "test-react": "cross-env NODE_ENV=test jest src/tests/* --config=jest.config.json --watch",
+    "test-watch": "nodemon --exec \"npm run test-express\""
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -20,6 +21,7 @@
     "babel-preset-react": "^6.24.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.4",
+    "cross-env": "^5.2.0",
     "css-loader": "^0.28.11",
     "dotenv": "^6.0.0",
     "dotenv-webpack": "^1.5.7",
