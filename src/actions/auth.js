@@ -1,5 +1,4 @@
 import axios from "axios";
-import * as _ from "lodash";
 
 export const setUserDetails = ({ username, email }) => ({
   type: "SET_DETAILS",
