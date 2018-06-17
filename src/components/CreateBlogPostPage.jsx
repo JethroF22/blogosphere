@@ -9,6 +9,27 @@ class CreateBlogPostPage extends Component {
     coverPhotoURL: ""
   };
 
+  onTitleChange = e => {
+    const title = e.target.value;
+    this.setState(() => ({
+      title
+    }));
+  };
+
+  onBodyChange = e => {
+    const body = e.target.value;
+    this.setState(() => ({
+      body
+    }));
+  };
+
+  onURLChange = e => {
+    const coverPhotoURL = e.target.value;
+    this.setState(() => ({
+      coverPhotoURL
+    }));
+  };
+
   render() {
     return (
       <div>
@@ -34,8 +55,8 @@ class CreateBlogPostPage extends Component {
             type="text"
             name="coverPhoto"
             value={this.state.coverPhotoURL}
-            onChange={this.onUsernameChange}
-            placeholder="Image URL"
+            onChange={this.onURLChange}
+            placeholder="Image URL (optional)"
           />
           <br />
         </form>
