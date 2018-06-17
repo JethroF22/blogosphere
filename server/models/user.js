@@ -61,6 +61,18 @@ UserSchema.statics.findByCredentials = function({ email, password }) {
   });
 };
 
+UserSchema.statics.findByToken = function(token) {
+  const User = this;
+
+  return User.findOne({ token }).then(user => {
+    if (!user) {
+      return Promise.reject();
+    } else {
+      return Promise.resolve(user);
+    }
+  });
+};
+
 UserSchema.pre("save", function(next) {
   const user = this;
 
@@ -78,6 +90,4 @@ UserSchema.pre("save", function(next) {
 
 const User = mongoose.model("User", UserSchema);
 
-module.exports = {
-  User
-};
+module.exports = User;

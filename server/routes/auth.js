@@ -1,7 +1,7 @@
 const express = require("express");
 const _ = require("lodash");
 
-const { User } = require("../models/user");
+const User = require("../models/user");
 
 const router = express.Router();
 
@@ -12,8 +12,8 @@ router.post("/register", (req, res) => {
   const token = user.generateAuthToken();
   const responseObject = {
     token,
-    username: credentials.username,
-    email: credentials.email
+    username: user.username,
+    email: user.email
   };
   user
     .save()
