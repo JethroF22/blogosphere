@@ -1,7 +1,7 @@
 const express = require("express");
 const _ = require("lodash");
 
-const { BlogPost } = require("../models/blogPost");
+const BlogPost = require("../models/blogPost");
 const authenticate = require("../middleware/authenticate");
 
 const router = express.Router();
