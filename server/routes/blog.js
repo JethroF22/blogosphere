@@ -2,7 +2,7 @@ const express = require("express");
 const _ = require("lodash");
 
 const { BlogPost } = require("../models/blogPost");
-const { authenticate } = require("../middleware/authenticate");
+const authenticate = require("../middleware/authenticate");
 
 const router = express.Router();
 
@@ -20,9 +20,13 @@ router.post("/create", authenticate, (req, res) => {
   post
     .save()
     .then(doc => {
-      res.send(doc);
+      res.send(
+        _.pick(doc, ["author", "title", "body", "createdAt", "coverPhotoURL"])
+      );
     })
     .catch(() => {
       res.status(400).send();
     });
 });
+
+module.exports = router;
