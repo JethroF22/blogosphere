@@ -10,8 +10,10 @@ const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+
 const { mongoose } = require("./db/mongoose");
 const auth = require("./routes/auth");
+const blog = require("./routes/blog");
 
 const app = express();
 app.use(cors());
@@ -19,6 +21,7 @@ const publicPath = path.join(__dirname, "..", "public");
 app.use(bodyParser.json());
 app.use(express.static(publicPath));
 app.use("/auth", auth);
+app.use("/blog", blog);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is live on port ${process.env.PORT}`);
