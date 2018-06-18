@@ -33,7 +33,24 @@ router.post("/create", authenticate, (req, res) => {
         ])
       );
     })
-    .catch(() => {
+    .catch(err => {
+      console.log(err);
+      res.status(400).send();
+    });
+});
+
+router.get("/view/:slug", (req, res) => {
+  const slug = req.params.slug;
+
+  BlogPost.findOne({ slug })
+    .then(post => {
+      if (!post) {
+        return res.status(404).send();
+      }
+
+      res.send({ blogPost: post });
+    })
+    .catch(err => {
       res.status(400).send();
     });
 });
