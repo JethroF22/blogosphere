@@ -38,13 +38,21 @@ const blogPosts = [
     title: "Test 1",
     body: "This is a test",
     createdAt: 298342938,
-    slug: slugify("Test 1")
+    slug: slugify("Test 1"),
+    author: {
+      _id: userOneID,
+      name: users[0].username
+    }
   },
   {
     title: "Test 2",
     body: "This is also test",
     createdAt: 298342938,
-    slug: slugify("Test 2")
+    slug: slugify("Test 2"),
+    author: {
+      _id: userTwoID,
+      name: users[1].username
+    }
   }
 ];
 
