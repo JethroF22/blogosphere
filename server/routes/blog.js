@@ -48,7 +48,18 @@ router.get("/view/:slug", (req, res) => {
         return res.status(404).send();
       }
 
-      res.send({ blogPost: post });
+      const blogPost = _.pick(post, [
+        "author",
+        "title",
+        "body",
+        "createdAt",
+        "coverPhotoURL",
+        "slug"
+      ]);
+
+      blogPost.author = blogPost.author.name;
+
+      res.send({ blogPost });
     })
     .catch(err => {
       res.status(400).send();
