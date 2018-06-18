@@ -1,7 +1,9 @@
 const { ObjectID } = require("mongodb");
 const jwt = require("jsonwebtoken");
+const slugify = require("slugify");
 
 const User = require("../../models/user");
+const BlogPost = require("../../models/blogPost");
 
 const userOneID = new ObjectID();
 const userTwoID = new ObjectID();
@@ -35,22 +37,36 @@ const blogPosts = [
   {
     title: "Test 1",
     body: "This is a test",
-    createdAt: 298342938
+    createdAt: 298342938,
+    slug: slugify("Test 1"),
+    author: {
+      _id: userOneID,
+      name: users[0].username
+    }
   },
   {
     title: "Test 2",
     body: "This is also test",
-    createdAt: 298342938
-  },
-  {
-    title: "Invalid Post",
-    createdAt: null,
-    body: 12932
+    createdAt: 298342938,
+    slug: slugify("Test 2"),
+    author: {
+      _id: userTwoID,
+      name: users[1].username
+    }
   }
 ];
+
+const populateBlogPosts = done => {
+  BlogPost.remove({})
+    .then(() => {
+      return BlogPost.insertMany(blogPosts);
+    })
+    .then(() => done());
+};
 
 module.exports = {
   users,
   populateUsers,
-  blogPosts
+  blogPosts,
+  populateBlogPosts
 };
