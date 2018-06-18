@@ -1,5 +1,6 @@
 const express = require("express");
 const _ = require("lodash");
+const slugify = require("slugify");
 
 const BlogPost = require("../models/blogPost");
 const authenticate = require("../middleware/authenticate");
@@ -14,14 +15,22 @@ router.post("/create", authenticate, (req, res) => {
     author: {
       _id: req.user._id,
       name: req.user.username
-    }
+    },
+    slug: slugify(body.title)
   });
 
   post
     .save()
     .then(doc => {
       res.send(
-        _.pick(doc, ["author", "title", "body", "createdAt", "coverPhotoURL"])
+        _.pick(doc, [
+          "author",
+          "title",
+          "body",
+          "createdAt",
+          "coverPhotoURL",
+          "slug"
+        ])
       );
     })
     .catch(() => {
