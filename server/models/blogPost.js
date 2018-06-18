@@ -40,6 +40,10 @@ const BlogPostSchema = new mongoose.Schema({
       type: String,
       minLength: 6
     }
+  },
+  slug: {
+    type: String,
+    required: true
   }
 });
 
