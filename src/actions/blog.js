@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import setActionStatus from "./status";
+
 export const setCurrentPost = article => ({
   type: "SET_CURRENT_ARTICLE",
   article
@@ -24,9 +26,10 @@ export const createArticle = (blogPost, token) => {
             author: data.author.username
           })
         );
+        dispatch(setActionStatus("SUCCESSFUL"));
       })
       .catch(error => {
-        return Promise.reject();
+        dispatch(setActionStatus("FAILED"));
       });
   };
 };
