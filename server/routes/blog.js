@@ -66,4 +66,23 @@ router.get("/view/:slug", (req, res) => {
     });
 });
 
+router.get("/view", (req, res) => {
+  BlogPost.find({}).then(docs => {
+    const posts = [];
+    docs.forEach(doc => {
+      const blogPost = _.pick(doc, [
+        "author",
+        "title",
+        "body",
+        "createdAt",
+        "coverPhotoURL",
+        "slug"
+      ]);
+      blogPost.author = blogPost.author.name;
+      posts.push(blogPost);
+    });
+    res.send(posts);
+  });
+});
+
 module.exports = router;
