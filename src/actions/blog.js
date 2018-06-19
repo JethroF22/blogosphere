@@ -27,8 +27,35 @@ export const createArticle = (blogPost, token) => {
           })
         );
         dispatch(setActionStatus("SUCCESSFUL"));
+        return data.slug;
       })
       .catch(error => {
+        dispatch(setActionStatus("FAILED"));
+      });
+  };
+};
+
+export const getArticle = slug => {
+  return dispatch => {
+    const url = `${process.env.API_URL}blog/view/${slug}`;
+    dispatch(setActionStatus("IN_PROGRESS"));
+    return axios({
+      url,
+      method: "get"
+    })
+      .then(response => {
+        const data = response.data.blogPost;
+        console.log(data);
+        dispatch(
+          setCurrentPost({
+            ...data,
+            author: data.author.username
+          })
+        );
+        dispatch(setActionStatus("SUCCESSFUL"));
+      })
+      .catch(error => {
+        console.log(error);
         dispatch(setActionStatus("FAILED"));
       });
   };
