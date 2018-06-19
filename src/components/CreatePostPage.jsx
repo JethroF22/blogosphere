@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import Textarea from "react-textarea-autosize";
 import _ from "lodash";
+import slugify from "slugify";
 
 import { createArticle } from "../actions/blog";
+import setActionStatus from "../actions/status";
 
 class CreateBlogPostPage extends Component {
   state = {
@@ -40,18 +42,19 @@ class CreateBlogPostPage extends Component {
     if (!(this.state.body === "" && this.state.title === "")) {
       const blogPost = _.pick(this.state, ["title", "body", "coverPhotoURL"]);
       const token = localStorage.getItem("token");
-
-      console.log("post:", blogPost);
-      console.log("token:", token);
-
-      this.props
-        .createArticle(blogPost, token)
-        .then(() => {
-          console.log("Article created");
-        })
-        .catch(() => {
-          console.log("DB error");
-        });
+      this.props.setActionInProgress();
+      this.props.createArticle(blogPost, token).then(slug => {
+        if (this.props.actionStatus === "Action successful") {
+          this.props.history.push(`/blog/view/${slug}`);
+        } else if (this.props.actionStatus === "Action failed") {
+          this.setState(prevState => ({
+            errors: {
+              ...prevState.errors,
+              authentication: "An error occured while creating the article"
+            }
+          }));
+        }
+      });
     } else {
       const errors = {};
       ["title", "body"].forEach(field => {
@@ -104,11 +107,16 @@ class CreateBlogPostPage extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  actionStatus: state.status.status
+});
+
 const mapDispatchToProps = dispatch => ({
-  createArticle: (article, token) => dispatch(createArticle(article, token))
+  createArticle: (article, token) => dispatch(createArticle(article, token)),
+  setActionInProgress: () => dispatch(setActionStatus("IN_PROGRESS"))
 });
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(CreateBlogPostPage);
