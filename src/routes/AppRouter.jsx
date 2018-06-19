@@ -16,7 +16,7 @@ const AppRouter = () => {
           <Route exact path="/" component={HomePage} />
           <Route path="/register" component={RegistrationPage} />
           <Route path="/login" component={LoginPage} />
-          <Route path="/blog/createPost" component={CreatePostPage} />
+          <Route path="/blog/create" component={CreatePostPage} />
           <Route path="/blog/view/:slug" component={ViewPostPage} />
           <Route component={Error404} />
         </Switch>
