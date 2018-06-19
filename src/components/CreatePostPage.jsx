@@ -43,8 +43,17 @@ class CreateBlogPostPage extends Component {
       const blogPost = _.pick(this.state, ["title", "body", "coverPhotoURL"]);
       const token = localStorage.getItem("token");
       this.props.setActionInProgress();
-      this.props.createArticle(blogPost, token).then(() => {
-        console.log(this.props.actionStatus);
+      this.props.createArticle(blogPost, token).then(slug => {
+        if (this.props.actionStatus === "Action successful") {
+          this.props.history.push(`/blog/view/${slug}`);
+        } else if (this.props.actionStatus === "Action failed") {
+          this.setState(prevState => ({
+            errors: {
+              ...prevState.errors,
+              authentication: "An error occured while creating the article"
+            }
+          }));
+        }
       });
     } else {
       const errors = {};
