@@ -1,11 +1,5 @@
-export const actionInProgress = () => {
-  type: "IN_PROGRESS";
-};
+const setActionStatus = type => ({
+  type
+});
 
-export const actionSuccessful = () => {
-  type: "SUCCESSFUL";
-};
-
-export const actionFailed = () => {
-  type: "FAILED";
-};
+export default setActionStatus;
