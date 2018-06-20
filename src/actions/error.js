@@ -1,5 +1,6 @@
-const setError = errorMsg => {
-  type: "SET_MESSAGE", errorMsg;
-};
+const setError = message => ({
+  type: "SET_MESSAGE",
+  message
+});
 
 export default setError;
