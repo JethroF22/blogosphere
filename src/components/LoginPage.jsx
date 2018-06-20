@@ -44,7 +44,9 @@ export class LoginPage extends Component {
       <div>
         <h1>Login</h1>
         <form onSubmit={this.onSubmit}>
-          {this.state.error && <p>{this.state.error}</p>}
+          {this.props.authenticationError && (
+            <p>{this.props.authenticationError}</p>
+          )}
           <label htmlFor="email">Email: </label>
           <input
             type="text"
@@ -68,12 +70,16 @@ export class LoginPage extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  authenticationError: state.error.message
+});
+
 const mapDispatchToProps = dispatch => ({
   login: userCredentials =>
     dispatch(startAuthentication(userCredentials, "login "))
 });
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(LoginPage);
