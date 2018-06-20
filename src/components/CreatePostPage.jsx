@@ -46,13 +46,6 @@ class CreateBlogPostPage extends Component {
       this.props.createArticle(blogPost, token).then(slug => {
         if (this.props.actionStatus === "Action successful") {
           this.props.history.push(`/blog/view/${slug}`);
-        } else if (this.props.actionStatus === "Action failed") {
-          this.setState(prevState => ({
-            errors: {
-              ...prevState.errors,
-              authentication: "An error occured while creating the article"
-            }
-          }));
         }
       });
     } else {
@@ -71,9 +64,7 @@ class CreateBlogPostPage extends Component {
       <div>
         <h1>Create a Blog Post</h1>
         <form onSubmit={this.onSubmit}>
-          {this.state.errors.authentication && (
-            <p>{this.state.errors.authentication}</p>
-          )}
+          {this.props.creationError && <p>{this.props.creationError}</p>}
           <label htmlFor="title">Title: </label>
           <input
             type="text"
@@ -108,7 +99,8 @@ class CreateBlogPostPage extends Component {
 }
 
 const mapStateToProps = state => ({
-  actionStatus: state.status.status
+  actionStatus: state.status.status,
+  creationError: state.error.message
 });
 
 const mapDispatchToProps = dispatch => ({

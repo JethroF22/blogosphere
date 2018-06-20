@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import setActionStatus from "./status";
+import setError from "./error";
 
 export const setCurrentPost = article => ({
   type: "SET_CURRENT_ARTICLE",
@@ -27,10 +28,14 @@ export const createArticle = (blogPost, token) => {
           })
         );
         dispatch(setActionStatus("SUCCESSFUL"));
+        dispatch(setError(""));
         return data.slug;
       })
       .catch(error => {
         dispatch(setActionStatus("FAILED"));
+        if (error.response.status === 400) {
+          dispatch(setError(error.response.data.error));
+        }
       });
   };
 };
@@ -55,7 +60,6 @@ export const getArticle = slug => {
         dispatch(setActionStatus("SUCCESSFUL"));
       })
       .catch(error => {
-        console.log(error);
         dispatch(setActionStatus("FAILED"));
       });
   };

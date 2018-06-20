@@ -49,7 +49,6 @@ export class RegistrationPage extends Component {
       errors
     }));
     if (Object.keys(errors).length === 0) {
-      console.log("Valid form data");
       this.props.register(
         _.pick(this.state, ["password", "username", "email"])
       );
@@ -61,8 +60,8 @@ export class RegistrationPage extends Component {
       <div>
         <h1>Create An Account</h1>
         <form onSubmit={this.onSubmit}>
-          {this.state.errors.authentication && (
-            <p>{this.state.errors.authentication}</p>
+          {this.props.authenticationError && (
+            <p>{this.props.authenticationError}</p>
           )}
           <label htmlFor="username">Username: </label>
           <input
@@ -112,12 +111,16 @@ export class RegistrationPage extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  authenticationError: state.error.message
+});
+
 const mapDispatchToProps = dispatch => ({
   register: userCredentials =>
     dispatch(startAuthentication(userCredentials, "register"))
 });
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(RegistrationPage);

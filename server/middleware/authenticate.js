@@ -14,7 +14,7 @@ const authenticate = (req, res, next) => {
         next();
       })
       .catch(error => {
-        res.status.send(401);
+        res.status(401).send();
       });
   }
 };

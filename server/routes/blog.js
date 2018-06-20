@@ -34,8 +34,12 @@ router.post("/create", authenticate, (req, res) => {
       );
     })
     .catch(err => {
-      console.log(err);
-      res.status(400).send();
+      let errorMsg;
+      if (err.code === 11000) {
+        errorMsg =
+          "'Title' and 'Body' need to be unique values. No 2 posts with the same title or body can exist.";
+      }
+      res.status(400).send({ error: errorMsg });
     });
 });
 
@@ -81,7 +85,7 @@ router.get("/view", (req, res) => {
       blogPost.author = blogPost.author.name;
       posts.push(blogPost);
     });
-    res.send(posts);
+    res.send({ posts });
   });
 });
 
