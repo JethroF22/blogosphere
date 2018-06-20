@@ -7,8 +7,7 @@ import { startAuthentication } from "../actions/auth";
 export class LoginPage extends Component {
   state = {
     password: "",
-    email: "",
-    error: ""
+    email: ""
   };
 
   onEmailChange = e => {
@@ -28,15 +27,12 @@ export class LoginPage extends Component {
   onSubmit = e => {
     e.preventDefault();
 
-    this.props
-      .login(_.pick(this.state, ["email", "password"]))
-      .then(token => {
-        this.setState(() => ({ error: "" }));
+    this.props.login(_.pick(this.state, ["email", "password"])).then(token => {
+      if (this.props.actionStatus === "Action successful") {
         localStorage.setItem("token", token);
-      })
-      .catch(error => {
-        this.setState(() => ({ error: "Invalid email/password combination" }));
-      });
+        this.props.history.push("/");
+      }
+    });
   };
 
   render() {
@@ -71,6 +67,7 @@ export class LoginPage extends Component {
 }
 
 const mapStateToProps = state => ({
+  actionStatus: state.status.status,
   authenticationError: state.error.message
 });
 
