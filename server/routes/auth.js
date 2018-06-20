@@ -41,8 +41,8 @@ router.post("/login", (req, res) => {
         email: user.email
       });
     })
-    .catch(err => {
-      res.status(400).send({ err });
+    .catch(() => {
+      res.status(400).send("Invalid email/password combination");
     });
 });
 
