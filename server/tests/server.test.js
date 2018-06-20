@@ -98,33 +98,49 @@ describe("/blog", () => {
     });
   });
 
-  describe("GET /view/:slug", () => {
+  describe("GET", () => {
     beforeEach(function(done) {
       this.timeout(0);
       populateBlogPosts(done);
     });
 
-    it("should return a blog post", function(done) {
-      this.timeout(0);
+    describe(" /view/:slug", () => {
+      it("should return a blog post", function(done) {
+        this.timeout(0);
 
-      const post = blogPosts[0];
+        const post = blogPosts[0];
 
-      request(app)
-        .get(`/blog/view/${post.slug}`)
-        .expect(200)
-        .expect(res => {
-          expect(res.body.blogPost.body).to.equal(post.body);
-          expect(res.body.blogPost.title).to.equal(post.title);
-          expect(res.body.blogPost.slug).to.equal(post.slug);
-        })
-        .end(done);
+        request(app)
+          .get(`/blog/view/${post.slug}`)
+          .expect(200)
+          .expect(res => {
+            expect(res.body.blogPost.body).to.equal(post.body);
+            expect(res.body.blogPost.title).to.equal(post.title);
+            expect(res.body.blogPost.slug).to.equal(post.slug);
+          })
+          .end(done);
+      });
+
+      it("should return 404 if no blog posts are found", done => {
+        request(app)
+          .get(`/blog/view/not-a-real-blog-post`)
+          .expect(404)
+          .end(done);
+      });
     });
 
-    it("should return 404 if no blog posts are found", done => {
-      request(app)
-        .get(`/blog/view/not-a-real-blog-post`)
-        .expect(404)
-        .end(done);
+    describe("/view", () => {
+      it("should return all blog posts", function(done) {
+        this.timeout(0);
+
+        request(app)
+          .get("/blog/view")
+          .expect(200)
+          .expect(res => {
+            expect(res.body.length).to.equal(2);
+          })
+          .end(done);
+      });
     });
   });
 });
