@@ -20,8 +20,12 @@ router.post("/register", (req, res) => {
     .then(() => {
       res.send(responseObject);
     })
-    .catch(error => {
-      res.status(400).send({ error });
+    .catch(err => {
+      let errorMsg;
+      if (err.code === 11000) {
+        errorMsg = "Email already in use";
+      }
+      res.status(400).send({ error: errorMsg });
     });
 });
 
@@ -36,7 +40,9 @@ router.post("/login", (req, res) => {
         email: user.email
       });
     })
-    .catch(err => res.status(400).send());
+    .catch(err => {
+      res.status(400).send({ err });
+    });
 });
 
 module.exports = router;
