@@ -137,7 +137,7 @@ describe("/blog", () => {
           .get("/blog/view")
           .expect(200)
           .expect(res => {
-            expect(res.body.length).to.equal(2);
+            expect(res.body.posts.length).to.equal(2);
           })
           .end(done);
       });
