@@ -1,4 +1,5 @@
 import axios from "axios";
+import setError from "./error";
 
 export const setUserDetails = ({ username, email }) => ({
   type: "SET_DETAILS",
@@ -19,10 +20,11 @@ export const startAuthentication = (userCredentials, type) => {
         dispatch(
           setUserDetails({ username: data.username, email: data.email })
         );
+        dispatch(setError({ message: "" }));
         return data.token;
       })
       .catch(error => {
-        return Promise.reject();
+        dispatch(setError(error.response.data));
       });
   };
 };

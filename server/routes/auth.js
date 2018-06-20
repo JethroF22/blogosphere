@@ -22,10 +22,11 @@ router.post("/register", (req, res) => {
     })
     .catch(err => {
       let errorMsg;
+      console.log(err);
       if (err.code === 11000) {
         errorMsg = "Email already in use";
       }
-      res.status(400).send({ error: errorMsg });
+      res.status(400).send(errorMsg);
     });
 });
 
