@@ -7,7 +7,12 @@ import { getArticle } from "../actions/blog";
 class ViewPostPage extends Component {
   componentDidMount() {
     if (!this.props.article) {
-      this.props.getArticle(this.props.match.params.slug);
+      this.props.getArticle(this.props.match.params.slug).then(() => {
+        if (this.props.actionStatus === "Action failed") {
+          console.log("Failed");
+          this.props.history.push("/404");
+        }
+      });
     }
   }
 
@@ -29,7 +34,8 @@ class ViewPostPage extends Component {
 }
 
 const mapStateToProps = state => ({
-  article: state.blog.currentArticle
+  article: state.blog.currentArticle,
+  actionStatus: state.status.status
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -55,7 +55,6 @@ export const getArticle = slug => {
         dispatch(setActionStatus("SUCCESSFUL"));
       })
       .catch(error => {
-        console.log(error);
         dispatch(setActionStatus("FAILED"));
       });
   };
