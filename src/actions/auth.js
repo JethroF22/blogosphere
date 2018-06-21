@@ -8,6 +8,8 @@ export const setUserDetails = ({ username, email }) => ({
   email
 });
 
+export const clearUserDetails = () => ({ type: "CLEAR_DETAILS" });
+
 export const startAuthentication = (userCredentials, type) => {
   return dispatch => {
     const url = `${process.env.API_URL}auth/${type}`;
