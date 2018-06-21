@@ -3,12 +3,14 @@ import axios from "axios";
 import setActionStatus from "./status";
 import setError from "./error";
 
-export const setCurrentPost = article => ({
-  type: "SET_CURRENT_ARTICLE",
-  article
+export const setCurrentPost = post => ({ type: "SET_CURRENT_POST", post });
+
+export const setPosts = posts => ({
+  type: "SET_POSTS",
+  posts
 });
 
-export const createArticle = (blogPost, token) => {
+export const createPost = (blogPost, token) => {
   return dispatch => {
     const url = `${process.env.API_URL}blog/create`;
     return axios({
@@ -40,7 +42,7 @@ export const createArticle = (blogPost, token) => {
   };
 };
 
-export const getArticle = slug => {
+export const getPost = slug => {
   return dispatch => {
     const url = `${process.env.API_URL}blog/view/${slug}`;
     dispatch(setActionStatus("IN_PROGRESS"));
@@ -50,13 +52,28 @@ export const getArticle = slug => {
     })
       .then(response => {
         const data = response.data.blogPost;
-        console.log(data);
         dispatch(
           setCurrentPost({
             ...data,
             author: data.author.username
           })
         );
+        dispatch(setActionStatus("SUCCESSFUL"));
+      })
+      .catch(error => {
+        dispatch(setActionStatus("FAILED"));
+      });
+  };
+};
+
+export const getPosts = () => {
+  return dispatch => {
+    const url = `${process.env.API_URL}blog/view`;
+    dispatch(setActionStatus("IN_PROGRESS"));
+    return axios({ url, method: "get" })
+      .then(response => {
+        const data = response.data.posts;
+        dispatch(setPosts(data.posts));
         dispatch(setActionStatus("SUCCESSFUL"));
       })
       .catch(error => {
