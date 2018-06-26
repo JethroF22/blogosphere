@@ -49,9 +49,14 @@ export class RegistrationPage extends Component {
       errors
     }));
     if (Object.keys(errors).length === 0) {
-      this.props.register(
-        _.pick(this.state, ["password", "username", "email"])
-      );
+      this.props
+        .register(_.pick(this.state, ["password", "username", "email"]))
+        .then(token => {
+          if (this.props.actionStatus === "Action successful") {
+            localStorage.setItem("token", token);
+            this.props.history.push("/");
+          }
+        });
     }
   };
 
