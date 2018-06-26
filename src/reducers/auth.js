@@ -8,7 +8,7 @@ export default (state = { username: "", email: "" }, action) => {
         token: action.token
       };
     case "CLEAR_DETAILS":
-      return { ...state, usermame: "", email: "" };
+      return { ...state, username: "", email: "", token: "" };
     default:
       return state;
   }

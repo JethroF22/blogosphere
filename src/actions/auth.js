@@ -2,7 +2,7 @@ import axios from "axios";
 import setError from "./error";
 import setActionStatus from "./status";
 
-export const setUserDetails = ({ username, email }) => ({
+export const setUserDetails = ({ username, email, token }) => ({
   type: "SET_DETAILS",
   username,
   email,
@@ -22,6 +22,7 @@ export const startAuthentication = (userCredentials, type) => {
     })
       .then(response => {
         const data = response.data;
+        console.log(data);
         dispatch(
           setUserDetails({
             username: data.username,
@@ -45,14 +46,15 @@ export const tokenAuthentication = token => {
   return dispatch => {
     const url = `${process.env.API_URL}auth/user_details`;
     dispatch(setActionStatus("IN_PROGRESS"));
-    return axios({
-      url,
-      method: "get"
-    })
+    return axios({ url, method: "get", headers: { token } })
       .then(response => {
         const data = response.data;
         dispatch(
-          setUserDetails({ username: data.username, email: data.email })
+          setUserDetails({
+            username: data.username,
+            email: data.email,
+            token
+          })
         );
         dispatch(setError(""));
         dispatch(setActionStatus("SUCCESSFUL"));
