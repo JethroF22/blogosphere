@@ -47,7 +47,7 @@ router.post("/login", (req, res) => {
     });
 });
 
-router.get("/token", authenticate, (req, res) => {
+router.get("/user_details", authenticate, (req, res) => {
   const user = _.pick(req.user, ["username", "email"]);
   res.send(user);
 });
