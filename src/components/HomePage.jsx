@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { getPosts } from "../actions/blog";
 import { clearUserDetails } from "../actions/auth";
+import ArticleList from "./ArticleList";
 
 class HomePage extends Component {
   componentDidMount() {
@@ -34,6 +35,11 @@ class HomePage extends Component {
             <br />
             <button onClick={this.clearUserDetails}>Log Out</button>
           </div>
+        )}
+        {this.props.posts ? (
+          <ArticleList posts={this.props.posts} />
+        ) : (
+          <p>No posts to be displayed</p>
         )}
       </div>
     );
