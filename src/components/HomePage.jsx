@@ -1,8 +1,8 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { getPosts } from "../actions/blog";
-
-const token = localStorage.getItem("token");
+import { clearUserDetails } from "../actions/auth";
 
 class HomePage extends Component {
   componentDidMount() {
@@ -11,11 +11,16 @@ class HomePage extends Component {
     }
   }
 
+  clearUserDetails = e => {
+    localStorage.removeItem("token");
+    this.props.clearUserDetails();
+  };
+
   render() {
     return (
       <div>
         <h1>Blogosphere</h1>
-        {!token ? (
+        {!this.props.token ? (
           <div>
             <Link to="/register">Create Account</Link>
             <br />
@@ -24,8 +29,10 @@ class HomePage extends Component {
           </div>
         ) : (
           <div>
+            <p>{this.props.username}</p>
             <Link to="/blog/create">Create Post</Link>
             <br />
+            <button onClick={this.clearUserDetails}>Log Out</button>
           </div>
         )}
       </div>
@@ -34,11 +41,17 @@ class HomePage extends Component {
 }
 
 const mapStateToProps = state => ({
-  posts: state.blog.posts
+  posts: state.blog.posts,
+  username: state.auth.username,
+  token: state.auth.token
 });
 
-const mapStateToProps = dispatch => ({
-  getPosts: () => dispatch(getPosts())
+const mapDispatchToProps = dispatch => ({
+  getPosts: () => dispatch(getPosts()),
+  clearUserDetails: () => dispatch(clearUserDetails())
 });
 
-export default HomePage;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomePage);
