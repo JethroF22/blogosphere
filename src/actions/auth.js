@@ -5,7 +5,8 @@ import setActionStatus from "./status";
 export const setUserDetails = ({ username, email }) => ({
   type: "SET_DETAILS",
   username,
-  email
+  email,
+  token
 });
 
 export const clearUserDetails = () => ({ type: "CLEAR_DETAILS" });
@@ -22,7 +23,11 @@ export const startAuthentication = (userCredentials, type) => {
       .then(response => {
         const data = response.data;
         dispatch(
-          setUserDetails({ username: data.username, email: data.email })
+          setUserDetails({
+            username: data.username,
+            email: data.email,
+            token: data.token
+          })
         );
         dispatch(setError(""));
         dispatch(setActionStatus("SUCCESSFUL"));
@@ -31,6 +36,28 @@ export const startAuthentication = (userCredentials, type) => {
       })
       .catch(error => {
         dispatch(setError(error.response.data));
+        dispatch(setActionStatus("FAILED"));
+      });
+  };
+};
+
+export const tokenAuthentication = token => {
+  return dispatch => {
+    const url = `${process.env.API_URL}auth/user_details`;
+    dispatch(setActionStatus("IN_PROGRESS"));
+    return axios({
+      url,
+      method: "get"
+    })
+      .then(response => {
+        const data = response.data;
+        dispatch(
+          setUserDetails({ username: data.username, email: data.email })
+        );
+        dispatch(setError(""));
+        dispatch(setActionStatus("SUCCESSFUL"));
+      })
+      .catch(error => {
         dispatch(setActionStatus("FAILED"));
       });
   };
