@@ -4,7 +4,7 @@ import Textarea from "react-textarea-autosize";
 import _ from "lodash";
 import slugify from "slugify";
 
-import { createArticle } from "../actions/blog";
+import { createPost } from "../actions/blog";
 import setActionStatus from "../actions/status";
 
 class CreateBlogPostPage extends Component {
@@ -43,7 +43,7 @@ class CreateBlogPostPage extends Component {
       const blogPost = _.pick(this.state, ["title", "body", "coverPhotoURL"]);
       const token = localStorage.getItem("token");
       this.props.setActionInProgress();
-      this.props.createArticle(blogPost, token).then(slug => {
+      this.props.createPost(blogPost, token).then(slug => {
         if (this.props.actionStatus === "Action successful") {
           this.props.history.push(`/blog/view/${slug}`);
         }
@@ -104,7 +104,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  createArticle: (article, token) => dispatch(createArticle(article, token)),
+  createPost: (article, token) => dispatch(createPost(article, token)),
   setActionInProgress: () => dispatch(setActionStatus("IN_PROGRESS"))
 });
 

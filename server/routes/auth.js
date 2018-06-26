@@ -2,6 +2,7 @@ const express = require("express");
 const _ = require("lodash");
 
 const User = require("../models/user");
+const authenticate = require("../middleware/authenticate");
 
 const router = express.Router();
 
@@ -44,6 +45,11 @@ router.post("/login", (req, res) => {
     .catch(() => {
       res.status(400).send("Invalid email/password combination");
     });
+});
+
+router.get("/user_details", authenticate, (req, res) => {
+  const user = _.pick(req.user, ["username", "email"]);
+  res.send(user);
 });
 
 module.exports = router;
