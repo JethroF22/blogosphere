@@ -72,8 +72,9 @@ export const getPosts = () => {
     dispatch(setActionStatus("IN_PROGRESS"));
     return axios({ url, method: "get" })
       .then(response => {
-        const data = response.data.posts;
-        dispatch(setPosts(data.posts));
+        const posts = response.data.posts;
+        console.log(posts);
+        dispatch(setPosts(posts));
         dispatch(setActionStatus("SUCCESSFUL"));
       })
       .catch(error => {

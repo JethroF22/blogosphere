@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import moment from "moment";
 
-import { getArticle } from "../actions/blog";
+import { getPost } from "../actions/blog";
 
 class ViewPostPage extends Component {
   componentDidMount() {
-    if (!this.props.article) {
-      this.props.getArticle(this.props.match.params.slug).then(() => {
+    if (!this.props.post) {
+      this.props.getPost(this.props.match.params.slug).then(() => {
         if (this.props.actionStatus === "Action failed") {
           console.log("Failed");
           this.props.history.push("/404");
@@ -19,11 +19,11 @@ class ViewPostPage extends Component {
   render() {
     return (
       <div>
-        {this.props.article ? (
+        {this.props.post ? (
           <div>
-            <h1>{this.props.article.title}</h1>
-            <p>{this.props.article.body}</p>
-            <p>{moment(this.props.article.createdAt).format("MMM Do YY")}</p>
+            <h1>{this.props.post.title}</h1>
+            <p>{this.props.post.body}</p>
+            <p>{moment(this.props.post.createdAt).format("MMM Do YY")}</p>
           </div>
         ) : (
           <p>Loading...</p>
@@ -34,12 +34,12 @@ class ViewPostPage extends Component {
 }
 
 const mapStateToProps = state => ({
-  article: state.blog.currentArticle,
+  post: state.blog.currentPost,
   actionStatus: state.status.status
 });
 
 const mapDispatchToProps = dispatch => ({
-  getArticle: slug => dispatch(getArticle(slug))
+  getPost: slug => dispatch(getPost(slug))
 });
 
 export default connect(
