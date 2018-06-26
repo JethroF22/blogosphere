@@ -73,7 +73,6 @@ export const getPosts = () => {
     return axios({ url, method: "get" })
       .then(response => {
         const posts = response.data.posts;
-        console.log(posts);
         dispatch(setPosts(posts));
         dispatch(setActionStatus("SUCCESSFUL"));
       })

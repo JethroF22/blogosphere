@@ -1,7 +1,13 @@
 import React from "react";
 
+import ArticleListItem from "./ArticleListItem";
+
 const ArticleList = props => (
-  <div>props.posts.forEach(post => {<ArticleListItem post={post} />})</div>
+  <div>
+    {props.posts.map(post => (
+      <ArticleListItem post={post} key={Math.floor(Math.random() * 99999)} />
+    ))}
+  </div>
 );
 
 export default ArticleList;
