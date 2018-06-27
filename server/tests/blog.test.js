@@ -18,30 +18,32 @@ beforeEach(function(done) {
   });
 });
 
-describe("POST /create", () => {
-  it("should create a new post", function(done) {
-    this.timeout(0);
+describe("POST", () => {
+  describe("/create", () => {
+    it("should create a new post", function(done) {
+      this.timeout(0);
 
-    const post = blogPosts[0];
+      const post = blogPosts[0];
 
-    request(app)
-      .post("/blog/create")
-      .set("token", users[0].token)
-      .expect(200)
-      .send(post)
-      .end((err, res) => {
-        if (err) {
-          return done(err);
-        }
+      request(app)
+        .post("/blog/create")
+        .set("token", users[0].token)
+        .expect(200)
+        .send(post)
+        .end((err, res) => {
+          if (err) {
+            return done(err);
+          }
 
-        BlogPost.findOne({ title: post.title })
-          .then(blogPost => {
-            expect(blogPost.title).to.equal(post.title);
-            expect(blogPost.body).to.equal(post.body);
-            done();
-          })
-          .catch(err => done(err));
-      });
+          BlogPost.findOne({ title: post.title })
+            .then(blogPost => {
+              expect(blogPost.title).to.equal(post.title);
+              expect(blogPost.body).to.equal(post.body);
+              done();
+            })
+            .catch(err => done(err));
+        });
+    });
   });
 });
 
@@ -89,8 +91,43 @@ describe("GET", () => {
         .end(done);
     });
   });
+});
 
-  describe("PATCH /edit/:slug", () => {
-    it("", () => {});
+describe("PATCH /edit/:slug", () => {
+  let updates;
+
+  beforeEach(function(done) {
+    this.timeout(0);
+    updates = { body: "This post has been edited" };
+    populateBlogPosts(done);
+  });
+
+  it("should update a blog post", done => {
+    request(app)
+      .patch(`/blog/edit/${blogPosts[0].slug}`)
+      .set("token", users[0].token)
+      .send(updates)
+      .expect(200)
+      .expect(res => {
+        expect(res.body.post.body).to.equal(updates.body);
+      })
+      .end(done);
+  });
+
+  it("should return 401 if token is invalid or non-existent", done => {
+    request(app)
+      .patch(`/blog/edit/${blogPosts[0].slug}`)
+      .send(updates)
+      .expect(401)
+      .end(done);
+  });
+
+  it("should return 404 if post does not exists", done => {
+    request(app)
+      .patch("/blog/edit/does-not-exist")
+      .set("token", users[0].token)
+      .send(updates)
+      .expect(404)
+      .end(done);
   });
 });
