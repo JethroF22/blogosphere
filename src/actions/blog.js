@@ -85,7 +85,6 @@ export const getPosts = () => {
 export const editPost = (blogPost, token, slug) => {
   return dispatch => {
     const url = `${process.env.API_URL}blog/edit/${slug}`;
-    console.log(url);
     return axios({
       url,
       data: blogPost,
