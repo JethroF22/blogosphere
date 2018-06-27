@@ -2,12 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import Textarea from "react-textarea-autosize";
 import _ from "lodash";
-import slugify from "slugify";
 
 import { createPost } from "../actions/blog";
-import setActionStatus from "../actions/status";
 
-class CreateBlogPostPage extends Component {
+class CreatePostPage extends Component {
   state = {
     body: "",
     title: "",
@@ -41,9 +39,7 @@ class CreateBlogPostPage extends Component {
 
     if (!(this.state.body === "" && this.state.title === "")) {
       const blogPost = _.pick(this.state, ["title", "body", "coverPhotoURL"]);
-      const token = localStorage.getItem("token");
-      this.props.setActionInProgress();
-      this.props.createPost(blogPost, token).then(slug => {
+      this.props.createPost(blogPost, this.props.token).then(slug => {
         if (this.props.actionStatus === "Action successful") {
           this.props.history.push(`/blog/view/${slug}`);
         }
@@ -100,15 +96,15 @@ class CreateBlogPostPage extends Component {
 
 const mapStateToProps = state => ({
   actionStatus: state.status.status,
-  creationError: state.error.message
+  creationError: state.error.message,
+  token: state.auth.token
 });
 
 const mapDispatchToProps = dispatch => ({
-  createPost: (article, token) => dispatch(createPost(article, token)),
-  setActionInProgress: () => dispatch(setActionStatus("IN_PROGRESS"))
+  createPost: (article, token) => dispatch(createPost(article, token))
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CreateBlogPostPage);
+)(CreatePostPage);
