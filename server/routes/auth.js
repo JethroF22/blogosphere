@@ -23,7 +23,6 @@ router.post("/register", (req, res) => {
     })
     .catch(err => {
       let errorMsg;
-      console.log(err);
       if (err.code === 11000) {
         errorMsg = "Email already in use";
       }
