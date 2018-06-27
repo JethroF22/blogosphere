@@ -81,3 +81,38 @@ export const getPosts = () => {
       });
   };
 };
+
+export const editPost = (blogPost, token, slug) => {
+  return dispatch => {
+    const url = `${process.env.API_URL}blog/edit/${slug}`;
+    console.log(url);
+    return axios({
+      url,
+      data: blogPost,
+      method: "patch",
+      headers: {
+        token
+      }
+    })
+      .then(response => {
+        const post = response.data.post;
+        dispatch(
+          setCurrentPost({
+            ...post,
+            author: post.author.username
+          })
+        );
+        dispatch(setActionStatus("SUCCESSFUL"));
+        dispatch(setError(""));
+        return post.slug;
+      })
+      .catch(error => {
+        dispatch(setActionStatus("FAILED"));
+        if (error.response.status === 400) {
+          dispatch(setError(error.response.data.error));
+        } else {
+          console.log("Failed");
+        }
+      });
+  };
+};
