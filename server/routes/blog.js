@@ -89,4 +89,28 @@ router.get("/view", (req, res) => {
   });
 });
 
+router.patch("/edit/:slug", authenticate, (req, res) => {
+  const slug = req.params.slug;
+  const updates = _.pick(req.body, ["body", "coverPhotoURL"]);
+  updates["updatedAt"] = new Date();
+
+  BlogPost.findOne({ slug })
+    .then(post => {
+      if (post) {
+        BlogPost.findOneAndUpdate(
+          { slug },
+          { $set: updates },
+          { new: true }
+        ).then(post => {
+          return res.send({ post });
+        });
+      } else {
+        res.status(404).send("Post not found");
+      }
+    })
+    .catch(error => {
+      res.status(400).send();
+    });
+});
+
 module.exports = router;
