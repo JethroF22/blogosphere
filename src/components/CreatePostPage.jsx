@@ -5,7 +5,7 @@ import _ from "lodash";
 
 import { createPost } from "../actions/blog";
 
-class CreatePostPage extends Component {
+export class CreatePostPage extends Component {
   state = {
     body: "",
     title: "",
