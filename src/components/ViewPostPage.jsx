@@ -23,7 +23,15 @@ class ViewPostPage extends Component {
           <div>
             <h1>{this.props.post.title}</h1>
             <p>{this.props.post.body}</p>
-            <p>{moment(this.props.post.createdAt).format("MMM Do YY")}</p>
+            <p>
+              Created on {moment(this.props.post.createdAt).format("MMM Do YY")}
+            </p>
+            {this.props.post.updatedAt && (
+              <p>
+                Updated on{" "}
+                {moment(this.props.post.updatedAt).format("MMM Do YY")}
+              </p>
+            )}
           </div>
         ) : (
           <p>Loading...</p>

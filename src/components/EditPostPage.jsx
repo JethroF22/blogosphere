@@ -3,22 +3,33 @@ import { connect } from "react-redux";
 import Textarea from "react-textarea-autosize";
 import _ from "lodash";
 
-import { createPost } from "../actions/blog";
+import { editPost } from "../actions/blog";
+import { getPost } from "../actions/blog";
 
-export class CreatePostPage extends Component {
+export class EditPostPage extends Component {
   state = {
     body: "",
     title: "",
     coverPhotoURL: "",
-    errors: {}
+    errors: {},
+    slug: this.props.match.params.slug
   };
 
-  onTitleChange = e => {
-    const title = e.target.value;
-    this.setState(() => ({
-      title
-    }));
-  };
+  componentDidMount() {
+    if (!this.props.post) {
+      this.props.getPost(this.state.slug).then(() => {
+        const state = _.pick(this.props.post, [
+          "title",
+          "body",
+          "coverPhotoURL"
+        ]);
+        this.setState(prevState => ({
+          ...prevState,
+          ...state
+        }));
+      });
+    }
+  }
 
   onBodyChange = e => {
     const body = e.target.value;
@@ -38,12 +49,14 @@ export class CreatePostPage extends Component {
     e.preventDefault();
 
     if (!(this.state.body === "" && this.state.title === "")) {
-      const blogPost = _.pick(this.state, ["title", "body", "coverPhotoURL"]);
-      this.props.createPost(blogPost, this.props.token).then(slug => {
-        if (this.props.actionStatus === "Action successful") {
-          this.props.history.push(`/blog/view/${slug}`);
-        }
-      });
+      const blogPost = _.pick(this.state, ["body", "coverPhotoURL"]);
+      this.props
+        .editPost(blogPost, this.props.token, this.state.slug)
+        .then(slug => {
+          if (this.props.actionStatus === "Action successful") {
+            this.props.history.push(`/blog/view/${slug}`);
+          }
+        });
     } else {
       const errors = {};
       ["title", "body"].forEach(field => {
@@ -58,7 +71,7 @@ export class CreatePostPage extends Component {
   render() {
     return (
       <div>
-        <h1>Create a Blog Post</h1>
+        <h1>Edit Blog Post</h1>
         <form onSubmit={this.onSubmit}>
           {this.props.creationError && <p>{this.props.creationError}</p>}
           <label htmlFor="title">Title: </label>
@@ -66,7 +79,7 @@ export class CreatePostPage extends Component {
             type="text"
             name="title"
             value={this.state.title}
-            onChange={this.onTitleChange}
+            disabled={true}
           />
           {this.state.errors.title && <p>{this.state.errors.title}</p>}
           <br />
@@ -87,7 +100,7 @@ export class CreatePostPage extends Component {
             placeholder="Image URL (optional)"
           />
           <br />
-          <button type="submit">Create Post</button>
+          <button type="submit">Update Post</button>
         </form>
       </div>
     );
@@ -97,14 +110,16 @@ export class CreatePostPage extends Component {
 const mapStateToProps = state => ({
   actionStatus: state.status.status,
   creationError: state.error.message,
+  post: state.blog.currentPost,
   token: state.auth.token
 });
 
 const mapDispatchToProps = dispatch => ({
-  createPost: (article, token) => dispatch(createPost(article, token))
+  editPost: (article, token, slug) => dispatch(editPost(article, token, slug)),
+  getPost: slug => dispatch(getPost(slug))
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CreatePostPage);
+)(EditPostPage);
