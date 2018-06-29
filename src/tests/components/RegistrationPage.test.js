@@ -8,7 +8,8 @@ import users from "../seed/users";
 let wrapper, register;
 
 beforeEach(() => {
-  register = jest.fn();
+  const token = "token";
+  register = jest.fn().mockResolvedValueOnce(token);
   wrapper = shallow(<RegistrationPage register={register} />);
 });
 
