@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render component correctly 1`] = `
+<div>
+  <h1>
+    Edit Blog Post
+  </h1>
+  <form
+    onSubmit={[Function]}
+  >
+    <label
+      htmlFor="title"
+    >
+      Title: 
+    </label>
+    <input
+      disabled={true}
+      name="title"
+      type="text"
+      value=""
+    />
+    <br />
+    <label
+      htmlFor="body"
+    >
+      Body: 
+    </label>
+    <TextareaAutosize
+      inputRef={[Function]}
+      name="body"
+      onChange={[Function]}
+      onHeightChange={[Function]}
+      useCacheForDOMMeasurements={false}
+      value=""
+    />
+    <br />
+    <label
+      htmlFor="coverPhoto"
+    >
+      Cover Photo: 
+    </label>
+    <input
+      name="coverPhoto"
+      onChange={[Function]}
+      placeholder="Image URL (optional)"
+      type="text"
+      value=""
+    />
+    <br />
+    <button
+      type="submit"
+    >
+      Update Post
+    </button>
+  </form>
+</div>
+`;

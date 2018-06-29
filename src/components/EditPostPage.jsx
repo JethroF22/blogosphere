@@ -6,7 +6,7 @@ import _ from "lodash";
 import { editPost } from "../actions/blog";
 import { getPost } from "../actions/blog";
 
-class EditPostPage extends Component {
+export class EditPostPage extends Component {
   state = {
     body: "",
     title: "",
