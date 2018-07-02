@@ -13,7 +13,8 @@ const BlogPostSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    unique: true
+    unique: true,
+    text: true
   },
   coverPhotoURL: {
     type: String,
