@@ -27,6 +27,19 @@ const UserSchema = new mongoose.Schema({
   token: {
     type: String,
     required: true
+  },
+  photo: {
+    type: String,
+    trim: true,
+    validator: {
+      validator: validator.isURL,
+      message: "{VALUE} is not a valid URL"
+    }
+  },
+  bio: {
+    type: String,
+    index: text,
+    trim: true
   }
 });
 
