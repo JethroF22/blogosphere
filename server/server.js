@@ -14,7 +14,6 @@ const cors = require("cors");
 const { mongoose } = require("./db/mongoose");
 const auth = require("./routes/auth");
 const blog = require("./routes/blog");
-const profile = require("./routes/profile");
 
 const app = express();
 app.use(cors());
@@ -23,7 +22,6 @@ app.use(bodyParser.json());
 app.use(express.static(publicPath));
 app.use("/auth", auth);
 app.use("/blog", blog);
-app.use("/profile", profile);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is live on port ${process.env.PORT}`);
