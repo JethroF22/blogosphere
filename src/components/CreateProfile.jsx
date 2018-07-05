@@ -1,32 +1,54 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import _ from "lodash";
 import Textarea from "react-textarea-autosize";
+
+import { createProfile } from "../actions/profile";
 
 class CreateProfile extends Component {
   state = {
     photo: "",
-    bio: ""
+    bio: "",
+    skipProfileCreation: true
   };
 
-  onPhotoChange() {
+  onPhotoChange = e => {
     const photo = e.target.value;
     this.setState(() => ({
       photo
     }));
-  }
+  };
 
-  onBioChange() {
+  onBioChange = e => {
     const bio = e.target.value;
     this.setState(() => ({
       bio
     }));
-  }
+  };
+
+  onSubmit = e => {
+    e.preventDefault();
+
+    if (!(this.state.profile === "" && this.state.bio === "")) {
+      this.props.createProfile(this.state, this.props.token).then(() => {
+        if (this.props.actionStatus === "Action successful") {
+          this.props.history.push(`/`);
+        }
+      });
+    } else {
+      const errors = {};
+      ["photo", "bio"].forEach(field => {
+        if (this.state[field] === "") {
+          errors[field] = `"${field}" cannot be blank`;
+        }
+        this.setState(() => ({ errors }));
+      });
+    }
+  };
 
   render() {
     return (
       <div>
-        <form>
+        <form onSubmit={this.onSubmit}>
           <h1>Complete your profile</h1>
           <label htmlFor="photo">Photo: </label>
           <input
@@ -36,6 +58,8 @@ class CreateProfile extends Component {
             onChange={this.onPhotoChange}
             placeholder="Image URL"
           />
+          {this.state.errors.photo && <p>{this.state.errors.photo}</p>}
+
           <label htmlFor="bio">Bio: </label>
           <Textarea
             name="bio"
@@ -43,10 +67,23 @@ class CreateProfile extends Component {
             value={this.state.bio}
             placeholder="Tell us more about yourself..."
           />
+          {this.state.errors.bio && <p>{this.state.errors.bio}</p>}
         </form>
       </div>
     );
   }
 }
 
-export default CreateProfile;
+const mapStateToProps = state => ({
+  actionStatus: state.status.status,
+  token: state.auth.token
+});
+
+const mapDispatchToProps = dispatch => ({
+  createProfile: (details, token) => dispatch(createProfile(details, token))
+});
+
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(CreateProfile);
