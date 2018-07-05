@@ -54,7 +54,7 @@ export class RegistrationPage extends Component {
         .then(token => {
           if (this.props.actionStatus === "Action successful") {
             localStorage.setItem("token", token);
-            this.props.history.push("/");
+            this.props.history.push("/profile/create");
           }
         });
     }
@@ -117,7 +117,8 @@ export class RegistrationPage extends Component {
 }
 
 const mapStateToProps = state => ({
-  authenticationError: state.error.message
+  authenticationError: state.error.message,
+  actionStatus: state.status.status
 });
 
 const mapDispatchToProps = dispatch => ({
