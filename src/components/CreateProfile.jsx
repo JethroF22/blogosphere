@@ -8,7 +8,7 @@ class CreateProfile extends Component {
   state = {
     photo: "",
     bio: "",
-    skipProfileCreation: true
+    errors: {}
   };
 
   onPhotoChange = e => {
@@ -68,6 +68,7 @@ class CreateProfile extends Component {
             placeholder="Tell us more about yourself..."
           />
           {this.state.errors.bio && <p>{this.state.errors.bio}</p>}
+          <button type="submit">Create Profile</button>
         </form>
       </div>
     );
@@ -84,6 +85,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(CreateProfile);
