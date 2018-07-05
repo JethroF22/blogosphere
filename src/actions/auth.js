@@ -22,7 +22,7 @@ export const startAuthentication = (userCredentials, type) => {
     })
       .then(response => {
         const data = response.data;
-        console.log(data);
+        dispatch(setActionStatus("SUCCESSFUL"));
         dispatch(
           setUserDetails({
             username: data.username,
@@ -31,7 +31,6 @@ export const startAuthentication = (userCredentials, type) => {
           })
         );
         dispatch(setError(""));
-        dispatch(setActionStatus("SUCCESSFUL"));
 
         return data.token;
       })
@@ -49,6 +48,8 @@ export const tokenAuthentication = token => {
     return axios({ url, method: "get", headers: { token } })
       .then(response => {
         const data = response.data;
+        dispatch(setActionStatus("SUCCESSFUL"));
+
         dispatch(
           setUserDetails({
             username: data.username,
@@ -57,7 +58,6 @@ export const tokenAuthentication = token => {
           })
         );
         dispatch(setError(""));
-        dispatch(setActionStatus("SUCCESSFUL"));
       })
       .catch(error => {
         dispatch(setActionStatus("FAILED"));

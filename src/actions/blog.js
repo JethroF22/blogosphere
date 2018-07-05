@@ -54,8 +54,7 @@ export const getPost = slug => {
         const data = response.data.blogPost;
         dispatch(
           setCurrentPost({
-            ...data,
-            author: data.author.username
+            ...data
           })
         );
         dispatch(setActionStatus("SUCCESSFUL"));
