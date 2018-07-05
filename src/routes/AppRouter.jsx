@@ -8,6 +8,7 @@ import LoginPage from "../components/LoginPage";
 import CreatePostPage from "../components/CreatePostPage";
 import ViewPostPage from "../components/ViewPostPage";
 import EditPostPage from "../components/EditPostPage";
+import CreateProfile from "../components/CreateProfile";
 
 const AppRouter = () => {
   return (
@@ -20,6 +21,7 @@ const AppRouter = () => {
           <Route path="/blog/create" component={CreatePostPage} />
           <Route path="/blog/view/:slug" component={ViewPostPage} />
           <Route path="/blog/edit/:slug" component={EditPostPage} />
+          <Route path="/profile/create" component={CreateProfile} />
           <Route component={Error404} />
         </Switch>
       </div>
