@@ -67,9 +67,16 @@ router.post("/profile", authenticate, (req, res) => {
     });
 });
 
-router.get("/profile", authenticate, (req, res) => {
-  const user = _.pick(req.user, ["photo", "bio"]);
-  res.send(user);
+router.get("/profile/:username", (req, res) => {
+  User.findOne({ username: req.params.username })
+    .then(user => {
+      if (!user) {
+        res.status(401).send("User not found");
+      }
+
+      res.send(_.pick(user, ["username", "bio", "photo"]));
+    })
+    .catch(err => res.status(400).send());
 });
 
 module.exports = router;
