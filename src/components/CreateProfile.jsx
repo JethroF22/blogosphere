@@ -32,6 +32,13 @@ class CreateProfile extends Component {
       this.props.createProfile(this.state, this.props.token).then(() => {
         if (this.props.actionStatus === "Action successful") {
           this.props.history.push(`/`);
+        } else {
+          this.setState(prevState => ({
+            errors: {
+              ...prevState.errors,
+              action: "An error occured while creating your profile."
+            }
+          }));
         }
       });
     } else {
@@ -50,6 +57,7 @@ class CreateProfile extends Component {
       <div>
         <form onSubmit={this.onSubmit}>
           <h1>Complete your profile</h1>
+          {this.state.errors.action && <p>{this.state.errors.action}</p>}
           <label htmlFor="photo">Photo: </label>
           <input
             type="text"

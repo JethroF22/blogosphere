@@ -21,7 +21,11 @@ export const createProfile = (details, token) => {
       method: "post",
       headers: { token }
     })
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+      .then(res => {
+        dispatch(setActionStatus("SUCCESSFUL"));
+      })
+      .catch(err => {
+        dispatch(setActionStatus("FAILED"));
+      });
   };
 };
