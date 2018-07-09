@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import moment from "moment";
+import { Link } from "react-router-dom";
 
 import { getPost } from "../actions/blog";
 
@@ -25,8 +26,16 @@ class ViewPostPage extends Component {
             <p>
               <em>
                 {" "}
-                Created by {this.props.post.author} on{" "}
-                {moment(this.props.post.createdAt).format("MMM Do YY")}
+                Created by
+                <Link
+                  to={{
+                    pathname: `/profile/view/${this.props.post.author}`,
+                    state: { username: this.props.post.author }
+                  }}
+                >
+                  {this.props.post.author}
+                </Link>
+                on {moment(this.props.post.createdAt).format("MMM Do YY")}
               </em>
             </p>
             <p>{this.props.post.body}</p>
