@@ -2,10 +2,11 @@ import axios from "axios";
 import setError from "./error";
 import setActionStatus from "./status";
 
-export const setDetails = (bio, photo) => ({
+export const setDetails = ({ bio, photo, username }) => ({
   type: "SET_DETAILS",
   bio,
-  photo
+  photo,
+  username
 });
 
 export const createProfile = (details, token) => {
@@ -23,6 +24,21 @@ export const createProfile = (details, token) => {
     })
       .then(res => {
         dispatch(setActionStatus("SUCCESSFUL"));
+        dispatch(setDetails(res.data));
+      })
+      .catch(err => {
+        dispatch(setActionStatus("FAILED"));
+      });
+  };
+};
+
+export const getProfile = username => {
+  return dispatch => {
+    const url = `${process.env.API_URL}auth/profile/${username}`;
+    return axios({ method: "get", url })
+      .then(res => {
+        dispatch(setActionStatus("SUCCESSFUL"));
+        dispatch(setDetails(res.data));
       })
       .catch(err => {
         dispatch(setActionStatus("FAILED"));
