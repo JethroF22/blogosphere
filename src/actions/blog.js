@@ -26,7 +26,7 @@ export const createPost = (blogPost, token) => {
         dispatch(
           setCurrentPost({
             ...data,
-            author: data.author.username
+            author: data.author.name
           })
         );
         dispatch(setActionStatus("SUCCESSFUL"));
@@ -37,6 +37,8 @@ export const createPost = (blogPost, token) => {
         dispatch(setActionStatus("FAILED"));
         if (error.response.status === 400) {
           dispatch(setError(error.response.data.error));
+        } else {
+          dispatch(setError("An unexpected error occurred"));
         }
       });
   };
