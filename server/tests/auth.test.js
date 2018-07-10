@@ -7,13 +7,13 @@ const User = require("../models/user");
 const { users, populateUsers } = require("./seed/seed");
 
 describe("/auth", () => {
-  describe("POST", () => {
-    describe("/register", () => {
-      beforeEach(function(done) {
-        this.timeout(0);
-        User.remove({}).then(() => done());
-      });
+  describe("/register", () => {
+    beforeEach(function(done) {
+      this.timeout(0);
+      User.remove({}).then(() => done());
+    });
 
+    describe("POST", () => {
       it("should create a new user", function(done) {
         this.timeout(0);
 
@@ -54,6 +54,52 @@ describe("/auth", () => {
             expect(res.error.errors).to.have.property("email");
           })
           .end(() => done());
+      });
+    });
+  });
+
+  describe("/profile", () => {
+    let photo, bio;
+
+    beforeEach(function(done) {
+      this.timeout(0);
+      photo =
+        "https://images.pexels.com/photos/1020323/pexels-photo-1020323.jpeg?auto=compress&cs=tinysrgb&h=650&w=940";
+      bio = "This is test user's bio";
+      populateUsers(done);
+    });
+
+    describe("POST", () => {
+      it("updates the user's details", done => {
+        request(app)
+          .post("/auth/profile")
+          .set("token", users[0].token)
+          .send({
+            photo,
+            bio
+          })
+          .expect(200)
+          .end((err, res) => {
+            if (err) {
+              return done(err);
+            }
+
+            User.findOne({ photo, bio })
+              .then(user => {
+                expect(user.photo).to.equal(photo);
+                expect(user.bio).to.equal(bio);
+                done();
+              })
+              .catch(err => done(err));
+          });
+      });
+
+      it("returns a 401 for requests without tokens", done => {
+        request(app)
+          .post("/auth/profile")
+          .send({ photo, bio })
+          .expect(401)
+          .end(done);
       });
     });
   });
