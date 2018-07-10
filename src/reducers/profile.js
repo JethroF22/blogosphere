@@ -9,6 +9,6 @@ export default (state = {}, action) => {
     case "CLEAR_DETAILS":
       return {};
     default:
-      break;
+      return state;
   }
 };

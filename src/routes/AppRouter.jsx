@@ -9,6 +9,7 @@ import CreatePostPage from "../components/CreatePostPage";
 import ViewPostPage from "../components/ViewPostPage";
 import EditPostPage from "../components/EditPostPage";
 import CreateProfile from "../components/CreateProfile";
+import ViewProfile from "../components/ViewProfile";
 
 const AppRouter = () => {
   return (
@@ -22,6 +23,7 @@ const AppRouter = () => {
           <Route path="/blog/view/:slug" component={ViewPostPage} />
           <Route path="/blog/edit/:slug" component={EditPostPage} />
           <Route path="/profile/create" component={CreateProfile} />
+          <Route path="/profile/view/:username" component={ViewProfile} />
           <Route component={Error404} />
         </Switch>
       </div>

@@ -5,6 +5,7 @@ import authReducer from "../reducers/auth";
 import blogReducer from "../reducers/blog";
 import statusReducer from "../reducers/status";
 import errorReducer from "../reducers/error";
+import profileReducer from "../reducers/profile";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -14,7 +15,8 @@ export default () => {
       auth: authReducer,
       blog: blogReducer,
       status: statusReducer,
-      error: errorReducer
+      error: errorReducer,
+      profile: profileReducer
     }),
     composeEnhancers(applyMiddleware(thunk))
   );

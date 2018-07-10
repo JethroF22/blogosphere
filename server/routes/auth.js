@@ -30,22 +30,6 @@ router.post("/register", (req, res) => {
     });
 });
 
-router.post("/profile", authenticate, (req, res) => {
-  const data = _.pick(req.body, ["photo", "bio"]);
-  const user = req.user;
-  user.photo = data.photo;
-  user.bio = data.bio;
-  user
-    .save()
-    .then(user => {
-      res.send(_.pick(user, ["photo", "bio"]));
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(400).send();
-    });
-});
-
 router.post("/login", (req, res) => {
   const credentials = _.pick(req.body, ["password", "email"]);
 
@@ -65,6 +49,34 @@ router.post("/login", (req, res) => {
 router.get("/user_details", authenticate, (req, res) => {
   const user = _.pick(req.user, ["username", "email"]);
   res.send(user);
+});
+
+router.post("/profile", authenticate, (req, res) => {
+  const data = _.pick(req.body, ["photo", "bio"]);
+  const user = req.user;
+  user.photo = data.photo;
+  user.bio = data.bio;
+  user
+    .save()
+    .then(user => {
+      res.send(_.pick(user, ["photo", "bio"]));
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400).send();
+    });
+});
+
+router.get("/profile/:username", (req, res) => {
+  User.findOne({ username: req.params.username })
+    .then(user => {
+      if (!user) {
+        res.status(401).send("User not found");
+      }
+
+      res.send(_.pick(user, ["username", "bio", "photo"]));
+    })
+    .catch(err => res.status(400).send());
 });
 
 module.exports = router;
