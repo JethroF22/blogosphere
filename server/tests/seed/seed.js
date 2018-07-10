@@ -14,14 +14,20 @@ const users = [
     email: "userone@gmail.com",
     username: "User One",
     password: "userone1",
-    token: jwt.sign({ _id: userOneID }, process.env.JWT_SECRET).toString()
+    token: jwt.sign({ _id: userOneID }, process.env.JWT_SECRET).toString(),
+    photo:
+      "https://images.pexels.com/photos/982612/pexels-photo-982612.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
+    bio: "User 1 bio"
   },
   {
     _id: userTwoID,
     email: "usertwo@gmail.com",
     username: "User Two",
     password: "usertwo2",
-    token: jwt.sign({ _id: userTwoID }, process.env.JWT_SECRET).toString()
+    token: jwt.sign({ _id: userTwoID }, process.env.JWT_SECRET).toString(),
+    photo:
+      "https://images.pexels.com/photos/908298/pexels-photo-908298.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
+    bio: "User 2 bio"
   }
 ];
 
