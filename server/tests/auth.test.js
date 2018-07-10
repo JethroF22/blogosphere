@@ -126,5 +126,37 @@ describe("/auth", () => {
         });
       });
     });
+
+    describe("PATCH ", () => {
+      let updates = {
+        photo:
+          "https://images.pexels.com/photos/566040/pexels-photo-566040.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
+        bio: "Updated bio"
+      };
+      let user = users[0];
+
+      describe("/:username", () => {
+        it("should update a user's profile", done => {
+          request(app)
+            .patch(`/auth/profile/`)
+            .set("token", user.token)
+            .send(updates)
+            .expect(200)
+            .expect(res => {
+              expect(res.body.photo).to.equal(updates.photo);
+              expect(res.body.bio).to.equal(updates.bio);
+            })
+            .end(done);
+        });
+
+        it("should return 401 if token is invalid or non-existent", done => {
+          request(app)
+            .patch(`/auth/profile/`)
+            .send(updates)
+            .expect(401)
+            .end(done);
+        });
+      });
+    });
   });
 });
