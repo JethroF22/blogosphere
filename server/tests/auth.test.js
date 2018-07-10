@@ -102,5 +102,29 @@ describe("/auth", () => {
           .end(done);
       });
     });
+
+    describe("GET", () => {
+      describe("/:username", () => {
+        it("fetches the user's profile", done => {
+          const user = users[0];
+
+          request(app)
+            .get(`/auth/profile/${user.username}`)
+            .expect(200)
+            .expect(res => {
+              expect(res.body.photo).to.equal(user.photo);
+              expect(res.body.bio).to.equal(user.bio);
+            })
+            .end(done);
+        });
+
+        it("should return 404 if a user is not found", done => {
+          request(app)
+            .get("/auth/profile/NonExistentUser")
+            .expect(404)
+            .end(done);
+        });
+      });
+    });
   });
 });
