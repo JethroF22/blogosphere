@@ -82,18 +82,20 @@ router.get("/profile/:username", (req, res) => {
 router.patch("/profile/:username", authenticate, (req, res) => {
   const data = _.pick(req.body, ["photo", "bio"]);
 
-  User.findOneAndUpdate(
-    { username: req.user.username, email: req.user.email },
-    { $set: data },
-    { new: true }
-  )
+  User.findOne({ username: req.params.username })
     .then(user => {
-      if (!user) {
+      if (user) {
+        User.findOneAndUpdate(
+          { username: req.user.username, email: req.user.email },
+          { $set: data },
+          { new: true }
+        ).then(user => {
+          user = _.pick(user, ["username", "bio", "photo", "email"]);
+          res.send(user);
+        });
+      } else {
         return res.status(404).send("User not found");
       }
-
-      user = _.pick(user, ["username", "bio", "photo", "email"]);
-      res.send(user);
     })
     .catch(err => res.status(400).send("DB error"));
 });
