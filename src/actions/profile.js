@@ -3,7 +3,7 @@ import setError from "./error";
 import setActionStatus from "./status";
 
 export const setDetails = ({ bio, photo, username }) => ({
-  type: "SET_DETAILS",
+  type: "SET_PROFILE_DETAILS",
   bio,
   photo,
   username
@@ -28,6 +28,32 @@ export const createProfile = (details, token) => {
       })
       .catch(err => {
         dispatch(setActionStatus("FAILED"));
+      });
+  };
+};
+
+export const editProfile = (updates, token) => {
+  return dispatch => {
+    const url = `${process.env.API_URL}auth/profile/`;
+    return axios({
+      url,
+      data: updates,
+      method: "patch",
+      headers: {
+        token
+      }
+    })
+      .then(response => {
+        const user = response.data;
+        dispatch(setDetails(user));
+        dispatch(setActionStatus("SUCCESSFUL"));
+        dispatch(setError(""));
+      })
+      .catch(error => {
+        dispatch(setActionStatus("FAILED"));
+        if (error.response.status === 400) {
+          dispatch(setError(error.response.data.error));
+        }
       });
   };
 };
