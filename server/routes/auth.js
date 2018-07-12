@@ -71,12 +71,27 @@ router.get("/profile/:username", (req, res) => {
   User.findOne({ username: req.params.username })
     .then(user => {
       if (!user) {
-        res.status(401).send("User not found");
+        res.status(404).send("User not found");
       }
 
       res.send(_.pick(user, ["username", "bio", "photo"]));
     })
     .catch(err => res.status(400).send());
+});
+
+router.patch("/profile/", authenticate, (req, res) => {
+  const data = _.pick(req.body, ["photo", "bio"]);
+
+  User.findOneAndUpdate(
+    { username: req.user.username, email: req.user.email },
+    { $set: data },
+    { new: true }
+  )
+    .then(user => {
+      user = _.pick(user, ["username", "bio", "photo", "email"]);
+      res.send(user);
+    })
+    .catch(err => res.status(400).send("DB error"));
 });
 
 module.exports = router;
