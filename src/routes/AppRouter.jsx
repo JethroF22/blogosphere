@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
+import PrivateRoute from "./PrivateRoute";
 import HomePage from "../components/HomePage";
 import Error404 from "../components/Error404";
 import RegistrationPage from "../components/RegistrationPage";
@@ -20,12 +21,12 @@ const AppRouter = () => {
           <Route exact path="/" component={HomePage} />
           <Route path="/register" component={RegistrationPage} />
           <Route path="/login" component={LoginPage} />
-          <Route path="/blog/create" component={CreatePostPage} />
+          <PrivateRoute path="/blog/create" component={CreatePostPage} />
           <Route path="/blog/view/:slug" component={ViewPostPage} />
-          <Route path="/blog/edit/:slug" component={EditPostPage} />
-          <Route path="/profile/create" component={CreateProfile} />
+          <PrivateRoute path="/blog/edit/:slug" component={EditPostPage} />
+          <PrivateRoute path="/profile/create" component={CreateProfile} />
           <Route path="/profile/view/:username" component={ViewProfile} />
-          <Route path="/profile/edit/" component={EditProfile} />
+          <PrivateRoute path="/profile/edit/" component={EditProfile} />
           <Route component={Error404} />
         </Switch>
       </div>
