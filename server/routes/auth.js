@@ -98,33 +98,39 @@ router.patch("/profile/", authenticate, (req, res) => {
 router.patch("/follow/", authenticate, (req, res) => {
   const author = _.pick(req.body, ["username", "_id"]);
   author._id = new ObjectID(author._id);
+  const follower = {
+    _id: req.user._id,
+    username: req.user.username
+  };
+
   User.findOneAndUpdate(
-    {
-      username: req.user.username,
-      followedAuthors: {
-        $nin: [author]
-      }
-    },
-    {
-      $push: {
-        followedAuthors: author
-      }
-    },
+    { ...author, followers: { $nin: [follower] } },
+    { $push: { followers: follower } },
     { new: true }
   )
     .then(user => {
       if (!user) {
-        return res
-          .status(400)
-          .send({ msg: "This author is already being followed" });
+        return res.status(404).send({ msg: "This user does not exist" });
       }
 
-      res.send(
-        _.pick(user, ["username", "bio", "photo", "email", "followedAuthors"])
-      );
+      User.findOneAndUpdate(
+        { username: req.user.username, followedAuthors: { $nin: [author] } },
+        { $push: { followedAuthors: author } },
+        { new: true }
+      ).then(user => {
+        if (!user) {
+          return res
+            .status(400)
+            .send({ msg: "This author is already being followed" });
+        }
+
+        res.send(
+          _.pick(user, ["username", "bio", "photo", "email", "followedAuthors"])
+        );
+      });
     })
     .catch(() => {
-      res.status(404).send({ msg: "DB error" });
+      res.status(400).send({ msg: "DB error" });
     });
 });
 
