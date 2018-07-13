@@ -157,4 +157,46 @@ describe("/auth", () => {
       });
     });
   });
+
+  describe("/follow", () => {
+    beforeEach(function(done) {
+      this.timeout(0);
+      populateUsers(done);
+    });
+
+    describe("PATCH", () => {
+      it("should add the author to the list of followed authors", done => {
+        const user = users[0];
+
+        request(app)
+          .patch("/auth/follow")
+          .set("token", user.token)
+          .send(users[1])
+          .expect(200)
+          .end((err, res) => {
+            if (err) {
+              return done(err);
+            }
+
+            User.findOne({ username: user.username })
+              .then(user => {
+                expect(user.followedAuthors.length).to.equal(1);
+                done();
+              })
+              .catch(err => done(err));
+          });
+      });
+
+      it("should return 400 if author is already being followed", done => {
+        const user = users[1];
+
+        request(app)
+          .patch("/auth/follow")
+          .set("token", user.token)
+          .send(users[0])
+          .expect(400)
+          .end(done);
+      });
+    });
+  });
 });
