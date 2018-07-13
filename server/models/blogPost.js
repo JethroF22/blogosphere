@@ -36,7 +36,7 @@ const BlogPostSchema = new mongoose.Schema({
       required: true,
       type: mongoose.Schema.Types.ObjectId
     },
-    name: {
+    username: {
       required: true,
       type: String,
       minLength: 6
