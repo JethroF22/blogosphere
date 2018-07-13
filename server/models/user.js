@@ -43,6 +43,10 @@ const UserSchema = new mongoose.Schema({
   },
   followedAuthors: [
     {
+      _id: {
+        required: true,
+        type: mongoose.Schema.Types.ObjectId
+      },
       username: {
         required: true,
         type: String,
