@@ -14,7 +14,7 @@ router.post("/create", authenticate, (req, res) => {
     createdAt: new Date(),
     author: {
       _id: req.user._id,
-      name: req.user.username
+      username: req.user.username
     },
     slug: slugify(body.title)
   });
@@ -61,7 +61,7 @@ router.get("/view/:slug", (req, res) => {
         "slug"
       ]);
 
-      blogPost.author = blogPost.author.name;
+      blogPost.author = blogPost.author.username;
 
       res.send({ blogPost });
     })
