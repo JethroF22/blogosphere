@@ -1,5 +1,6 @@
 const express = require("express");
 const _ = require("lodash");
+const { ObjectID } = require("mongodb");
 
 const User = require("../models/user");
 const authenticate = require("../middleware/authenticate");
@@ -95,7 +96,8 @@ router.patch("/profile/", authenticate, (req, res) => {
 });
 
 router.patch("/follow/", authenticate, (req, res) => {
-  const author = _.pick(req.body, ["username"]);
+  const author = _.pick(req.body, ["username", "_id"]);
+  author._id = new ObjectID(author._id);
   User.findOneAndUpdate(
     {
       username: req.user.username,
@@ -122,9 +124,7 @@ router.patch("/follow/", authenticate, (req, res) => {
       );
     })
     .catch(() => {
-      res
-        .status(400)
-        .send({ msg: "The author you are trying to follow does not exist." });
+      res.status(404).send({ msg: "DB error" });
     });
 });
 

@@ -27,7 +27,8 @@ const users = [
     token: jwt.sign({ _id: userTwoID }, process.env.JWT_SECRET).toString(),
     photo:
       "https://images.pexels.com/photos/908298/pexels-photo-908298.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
-    bio: "User 2 bio"
+    bio: "User 2 bio",
+    followedAuthors: [{ username: "User One", _id: userOneID }]
   }
 ];
 
@@ -47,7 +48,7 @@ const blogPosts = [
     slug: slugify("Test 1"),
     author: {
       _id: userOneID,
-      name: users[0].username
+      username: users[0].username
     }
   },
   {
@@ -57,7 +58,7 @@ const blogPosts = [
     slug: slugify("Test 2"),
     author: {
       _id: userTwoID,
-      name: users[1].username
+      username: users[1].username
     }
   }
 ];
