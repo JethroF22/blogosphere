@@ -94,4 +94,38 @@ router.patch("/profile/", authenticate, (req, res) => {
     .catch(err => res.status(400).send("DB error"));
 });
 
+router.patch("/follow/", authenticate, (req, res) => {
+  const author = _.pick(req.body, ["username"]);
+  User.findOneAndUpdate(
+    {
+      username: req.user.username,
+      followedAuthors: {
+        $nin: [author]
+      }
+    },
+    {
+      $push: {
+        followedAuthors: author
+      }
+    },
+    { new: true }
+  )
+    .then(user => {
+      if (!user) {
+        return res
+          .status(400)
+          .send({ msg: "This author is already being followed" });
+      }
+
+      res.send(
+        _.pick(user, ["username", "bio", "photo", "email", "followedAuthors"])
+      );
+    })
+    .catch(() => {
+      res
+        .status(400)
+        .send({ msg: "The author you are trying to follow does not exist." });
+    });
+});
+
 module.exports = router;
