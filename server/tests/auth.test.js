@@ -197,6 +197,20 @@ describe("/auth", () => {
           .expect(400)
           .end(done);
       });
+
+      it("should return 404 when trying to follow non-existent users", done => {
+        const user = {
+          username: "Random",
+          _id: new ObjectID()
+        };
+
+        request(app)
+          .patch("/auth/follow")
+          .set("token", users[0].token)
+          .send(user)
+          .expect(404)
+          .end(done);
+      });
     });
   });
 });
