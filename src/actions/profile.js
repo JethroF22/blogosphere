@@ -71,3 +71,20 @@ export const getProfile = username => {
       });
   };
 };
+
+export const followAuthor = (author, token) => {
+  return dispatch => {
+    console.log(author);
+    const url = `${process.env.API_URL}auth/follow/`;
+    return axios({
+      url,
+      method: "patch",
+      headers: {
+        token
+      },
+      data: author
+    })
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  };
+};

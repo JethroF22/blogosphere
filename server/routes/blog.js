@@ -61,8 +61,6 @@ router.get("/view/:slug", (req, res) => {
         "slug"
       ]);
 
-      blogPost.author = blogPost.author.username;
-
       res.send({ blogPost });
     })
     .catch(err => {
@@ -82,7 +80,6 @@ router.get("/view", (req, res) => {
         "coverPhotoURL",
         "slug"
       ]);
-      blogPost.author = blogPost.author.name;
       posts.push(blogPost);
     });
     res.send({ posts });
