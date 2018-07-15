@@ -40,7 +40,33 @@ const UserSchema = new mongoose.Schema({
     type: String,
     text: true,
     trim: true
-  }
+  },
+  followedAuthors: [
+    {
+      _id: {
+        required: true,
+        type: mongoose.Schema.Types.ObjectId
+      },
+      username: {
+        required: true,
+        type: String,
+        minLength: 6
+      }
+    }
+  ],
+  followers: [
+    {
+      _id: {
+        required: true,
+        type: mongoose.Schema.Types.ObjectId
+      },
+      username: {
+        required: true,
+        type: String,
+        minLength: 6
+      }
+    }
+  ]
 });
 
 UserSchema.methods.generateAuthToken = function() {

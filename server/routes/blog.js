@@ -14,7 +14,7 @@ router.post("/create", authenticate, (req, res) => {
     createdAt: new Date(),
     author: {
       _id: req.user._id,
-      name: req.user.username
+      username: req.user.username
     },
     slug: slugify(body.title)
   });
@@ -61,8 +61,6 @@ router.get("/view/:slug", (req, res) => {
         "slug"
       ]);
 
-      blogPost.author = blogPost.author.name;
-
       res.send({ blogPost });
     })
     .catch(err => {
@@ -82,7 +80,6 @@ router.get("/view", (req, res) => {
         "coverPhotoURL",
         "slug"
       ]);
-      blogPost.author = blogPost.author.name;
       posts.push(blogPost);
     });
     res.send({ posts });

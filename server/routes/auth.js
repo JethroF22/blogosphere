@@ -1,5 +1,6 @@
 const express = require("express");
 const _ = require("lodash");
+const { ObjectID } = require("mongodb");
 
 const User = require("../models/user");
 const authenticate = require("../middleware/authenticate");
@@ -92,6 +93,45 @@ router.patch("/profile/", authenticate, (req, res) => {
       res.send(user);
     })
     .catch(err => res.status(400).send("DB error"));
+});
+
+router.patch("/follow/", authenticate, (req, res) => {
+  const author = _.pick(req.body, ["username", "_id"]);
+  author._id = new ObjectID(author._id);
+  const follower = {
+    _id: req.user._id,
+    username: req.user.username
+  };
+
+  User.findOneAndUpdate(
+    { ...author, followers: { $nin: [follower] } },
+    { $push: { followers: follower } },
+    { new: true }
+  )
+    .then(user => {
+      if (!user) {
+        return res.status(404).send({ msg: "This user does not exist" });
+      }
+
+      User.findOneAndUpdate(
+        { username: req.user.username, followedAuthors: { $nin: [author] } },
+        { $push: { followedAuthors: author } },
+        { new: true }
+      ).then(user => {
+        if (!user) {
+          return res
+            .status(400)
+            .send({ msg: "This author is already being followed" });
+        }
+
+        res.send(
+          _.pick(user, ["username", "bio", "photo", "email", "followedAuthors"])
+        );
+      });
+    })
+    .catch(() => {
+      res.status(400).send({ msg: "DB error" });
+    });
 });
 
 module.exports = router;
