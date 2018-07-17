@@ -66,6 +66,22 @@ const UserSchema = new mongoose.Schema({
         minLength: 6
       }
     }
+  ],
+  likedArticles: [
+    {
+      _id: {
+        required: true,
+        type: mongoose.Schema.Types.ObjectId
+      },
+      title: {
+        required: true,
+        type: String
+      },
+      slug: {
+        required: true,
+        type: String
+      }
+    }
   ]
 });
 
