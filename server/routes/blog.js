@@ -3,6 +3,7 @@ const _ = require("lodash");
 const slugify = require("slugify");
 
 const BlogPost = require("../models/blogPost");
+const User = require("../models/user");
 const authenticate = require("../middleware/authenticate");
 
 const router = express.Router();
@@ -108,6 +109,45 @@ router.patch("/edit/:slug", authenticate, (req, res) => {
     .catch(error => {
       res.status(400).send();
     });
+});
+
+router.patch("/like/:slug", authenticate, (req, res) => {
+  const slug = req.params.slug;
+
+  BlogPost.findOneAndUpdate(
+    { slug, "author.username": { $ne: req.user.username } },
+    { $inc: { likes: 1 } },
+    { new: true }
+  )
+    .then(post => {
+      if (!post) {
+        return res.status(404).send({ msg: "Not found" });
+      }
+      const likedArticle = _.pick(post, ["title", "_id", "slug"]);
+      User.findOneAndUpdate(
+        {
+          username: req.user.username,
+          likedArticles: { $nin: [likedArticle] }
+        },
+        { $push: { likedArticles: likedArticle } },
+        { new: true }
+      ).then(user => {
+        res.send(
+          _.pick(
+            user,
+            "email",
+            "username",
+            "photo",
+            "bio",
+            "followedAuthors",
+            "followers",
+            "_id",
+            "likedArticles"
+          )
+        );
+      });
+    })
+    .catch(err => res.status(400).send());
 });
 
 module.exports = router;
