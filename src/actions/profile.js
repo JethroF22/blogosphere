@@ -2,11 +2,12 @@ import axios from "axios";
 import setError from "./error";
 import setActionStatus from "./status";
 
-export const setDetails = ({ bio, photo, username }) => ({
+export const setDetails = ({ bio, photo, followedAuthors, followers }) => ({
   type: "SET_PROFILE_DETAILS",
   bio,
   photo,
-  username
+  followedAuthors,
+  followers
 });
 
 export const createProfile = (details, token) => {
@@ -72,19 +73,25 @@ export const getProfile = username => {
   };
 };
 
-export const followAuthor = (author, token) => {
+export const followUnfollowAuthor = (author, token, type) => {
   return dispatch => {
-    console.log(author);
-    const url = `${process.env.API_URL}auth/follow/`;
+    const url = `${process.env.API_URL}auth/${
+      type === "follow" ? "follow" : "unfollow"
+    }/`;
     return axios({
       url,
-      method: "patch",
+      method: type === "follow" ? "patch" : "delete",
       headers: {
         token
       },
       data: author
     })
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+      .then(res => {
+        dispatch(setActionStatus("SUCCESSFUL"));
+        dispatch(setDetails(res.data));
+      })
+      .catch(err => {
+        dispatch(setActionStatus("FAILED"));
+      });
   };
 };

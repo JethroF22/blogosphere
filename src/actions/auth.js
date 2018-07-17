@@ -1,11 +1,13 @@
 import axios from "axios";
 import setError from "./error";
 import setActionStatus from "./status";
+import { setDetails } from "./profile";
 
-export const setUserDetails = ({ username, email, token }) => ({
+export const setUserDetails = ({ username, email, id, token }) => ({
   type: "SET_DETAILS",
   username,
   email,
+  id,
   token
 });
 
@@ -48,15 +50,16 @@ export const tokenAuthentication = token => {
     return axios({ url, method: "get", headers: { token } })
       .then(response => {
         const data = response.data;
+        console.log(data);
         dispatch(setActionStatus("SUCCESSFUL"));
 
         dispatch(
           setUserDetails({
-            username: data.username,
-            email: data.email,
+            ...data,
             token
           })
         );
+        dispatch(setDetails(data));
         dispatch(setError(""));
       })
       .catch(error => {

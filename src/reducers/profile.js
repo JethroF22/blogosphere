@@ -4,7 +4,9 @@ export default (state = {}, action) => {
       return {
         ...state,
         photo: action.photo,
-        bio: action.bio
+        bio: action.bio,
+        followedAuthors: action.followedAuthors,
+        followers: action.followers
       };
     case "CLEAR_PROFILE_DETAILS":
       return {};

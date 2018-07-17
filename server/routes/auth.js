@@ -48,7 +48,17 @@ router.post("/login", (req, res) => {
 });
 
 router.get("/user_details", authenticate, (req, res) => {
-  const user = _.pick(req.user, ["username", "email"]);
+  const user = _.pick(
+    req.user,
+    "email",
+    "username",
+    "photo",
+    "bio",
+    "followedAuthors",
+    "followers",
+    "_id"
+  );
+  console.log(user);
   res.send(user);
 });
 
@@ -122,6 +132,44 @@ router.patch("/follow/", authenticate, (req, res) => {
           return res
             .status(400)
             .send({ msg: "This author is already being followed" });
+        }
+
+        res.send(
+          _.pick(user, ["username", "bio", "photo", "email", "followedAuthors"])
+        );
+      });
+    })
+    .catch(() => {
+      res.status(400).send({ msg: "DB error" });
+    });
+});
+
+router.delete("/unfollow", authenticate, (req, res) => {
+  const author = _.pick(req.body, ["username", "_id"]);
+  author._id = new ObjectID(author._id);
+  const follower = { _id: req.user._id, username: req.user.username };
+
+  User.findOneAndUpdate(
+    { ...author, followers: { $in: [follower] } },
+    { $pull: { followers: follower } },
+    { new: true }
+  )
+    .then(user => {
+      if (!user) {
+        return res
+          .status(404)
+          .send({ msg: "this user is not currently following you" });
+      }
+
+      User.findOneAndUpdate(
+        { username: req.user.username, followedAuthors: { $in: [author] } },
+        { $pull: { followedAuthors: author } },
+        { new: true }
+      ).then(user => {
+        if (!user) {
+          return res
+            .status(400)
+            .send({ msg: "This author is not being followed" });
         }
 
         res.send(
