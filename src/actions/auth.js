@@ -50,7 +50,6 @@ export const tokenAuthentication = token => {
     return axios({ url, method: "get", headers: { token } })
       .then(response => {
         const data = response.data;
-        console.log(data);
         dispatch(setActionStatus("SUCCESSFUL"));
 
         dispatch(

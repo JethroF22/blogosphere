@@ -12,7 +12,7 @@ export const setDetails = ({ bio, photo, followedAuthors, followers }) => ({
 
 export const createProfile = (details, token) => {
   return dispatch => {
-    const url = `${process.env.API_URL}auth/profile`;
+    const url = `${process.env.API_URL}profile/create`;
     dispatch(setActionStatus("IN_PROGRESS"));
     return axios({
       url,
@@ -35,7 +35,7 @@ export const createProfile = (details, token) => {
 
 export const editProfile = (updates, token) => {
   return dispatch => {
-    const url = `${process.env.API_URL}auth/profile/`;
+    const url = `${process.env.API_URL}profile/update`;
     return axios({
       url,
       data: updates,
@@ -61,7 +61,7 @@ export const editProfile = (updates, token) => {
 
 export const getProfile = username => {
   return dispatch => {
-    const url = `${process.env.API_URL}auth/profile/${username}`;
+    const url = `${process.env.API_URL}profile/${username}`;
     return axios({ method: "get", url })
       .then(res => {
         dispatch(setActionStatus("SUCCESSFUL"));
@@ -75,7 +75,7 @@ export const getProfile = username => {
 
 export const followUnfollowAuthor = (author, token, type) => {
   return dispatch => {
-    const url = `${process.env.API_URL}auth/${
+    const url = `${process.env.API_URL}profile/${
       type === "follow" ? "follow" : "unfollow"
     }/`;
     return axios({

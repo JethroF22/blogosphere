@@ -16,13 +16,15 @@ class ViewPostPage extends Component {
       if (this.props.actionStatus === "Action failed") {
         this.props.history.push("/404");
       } else {
-        this.props.followedAuthors.forEach(author => {
-          if (author.username === this.props.post.author.username) {
-            this.setState(() => ({
-              followed: true
-            }));
-          }
-        });
+        if (this.props.followedAuthors) {
+          this.props.followedAuthors.forEach(author => {
+            if (author.username === this.props.post.author.username) {
+              this.setState(() => ({
+                followed: true
+              }));
+            }
+          });
+        }
       }
     });
   }
