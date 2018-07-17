@@ -48,7 +48,17 @@ router.post("/login", (req, res) => {
 });
 
 router.get("/user_details", authenticate, (req, res) => {
-  const user = _.pick(req.user, ["username", "email"]);
+  const user = _.pick(
+    req.user,
+    "email",
+    "username",
+    "photo",
+    "bio",
+    "followedAuthors",
+    "followers",
+    "_id"
+  );
+  console.log(user);
   res.send(user);
 });
 

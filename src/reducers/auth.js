@@ -5,7 +5,8 @@ export default (state = { username: "", email: "" }, action) => {
         ...state,
         username: action.username,
         email: action.email,
-        token: action.token
+        token: action.token,
+        id: action.id
       };
     case "CLEAR_DETAILS":
       return { ...state, username: "", email: "", token: "" };
