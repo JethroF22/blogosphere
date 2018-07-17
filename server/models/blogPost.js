@@ -45,6 +45,10 @@ const BlogPostSchema = new mongoose.Schema({
   slug: {
     type: String,
     required: true
+  },
+  likes: {
+    type: Number,
+    default: 0
   }
 });
 
