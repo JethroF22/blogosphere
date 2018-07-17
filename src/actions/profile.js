@@ -87,12 +87,10 @@ export const followUnfollowAuthor = (author, token, type) => {
       data: author
     })
       .then(res => {
-        console.log(res);
         dispatch(setActionStatus("SUCCESSFUL"));
         dispatch(setDetails(res.data));
       })
       .catch(err => {
-        console.log(err);
         dispatch(setActionStatus("FAILED"));
       });
   };

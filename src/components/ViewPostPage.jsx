@@ -4,18 +4,54 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 
 import { getPost } from "../actions/blog";
+import { followUnfollowAuthor } from "../actions/profile";
 
 class ViewPostPage extends Component {
+  state = {
+    followed: false
+  };
+
   componentDidMount() {
-    if (!this.props.post) {
-      this.props.getPost(this.props.match.params.slug).then(() => {
-        if (this.props.actionStatus === "Action failed") {
-          console.log("Failed");
-          this.props.history.push("/404");
+    this.props.getPost(this.props.match.params.slug).then(() => {
+      if (this.props.actionStatus === "Action failed") {
+        this.props.history.push("/404");
+      } else {
+        this.props.followedAuthors.forEach(author => {
+          if (author.username === this.props.post.author.username) {
+            this.setState(() => ({
+              followed: true
+            }));
+          }
+        });
+      }
+    });
+  }
+
+  followAuthor = e => {
+    this.props
+      .followAuthor(this.props.post.author, this.props.token)
+      .then(() => {
+        if (this.props.actionStatus === "Action successful") {
+          console.log("followed");
+          this.setState(() => ({
+            followed: true
+          }));
         }
       });
-    }
-  }
+  };
+
+  unfollowAuthor = e => {
+    this.props
+      .unfollowAuthor(this.props.post.author, this.props.token)
+      .then(() => {
+        if (this.props.actionStatus === "Action successful") {
+          console.log("Unfollowed");
+          this.setState(() => ({
+            followed: false
+          }));
+        }
+      });
+  };
 
   render() {
     return (
@@ -26,14 +62,16 @@ class ViewPostPage extends Component {
             <p>
               <em>
                 {" "}
-                Created by
+                Created by{" "}
                 <Link
                   to={{
-                    pathname: `/profile/view/${this.props.post.author}`,
-                    state: { username: this.props.post.author }
+                    pathname: `/profile/view/${
+                      this.props.post.author.username
+                    }`,
+                    state: { username: this.props.post.author.username }
                   }}
                 >
-                  {this.props.post.author}
+                  {this.props.post.author.username}{" "}
                 </Link>
                 on {moment(this.props.post.createdAt).format("MMM Do YY")}
               </em>
@@ -44,6 +82,15 @@ class ViewPostPage extends Component {
                 Updated on{" "}
                 {moment(this.props.post.updatedAt).format("MMM Do YY")}
               </p>
+            )}
+            {this.props.post.author !== this.props.username && (
+              <button
+                onClick={
+                  this.state.followed ? this.unfollowAuthor : this.followAuthor
+                }
+              >
+                {this.state.followed ? "Unfollow" : "Follow"} author
+              </button>
             )}
           </div>
         ) : (
@@ -56,11 +103,18 @@ class ViewPostPage extends Component {
 
 const mapStateToProps = state => ({
   post: state.blog.currentPost,
-  actionStatus: state.status.status
+  actionStatus: state.status.status,
+  token: state.auth.token,
+  username: state.auth.username,
+  followedAuthors: state.profile.followedAuthors
 });
 
 const mapDispatchToProps = dispatch => ({
-  getPost: slug => dispatch(getPost(slug))
+  getPost: slug => dispatch(getPost(slug)),
+  followAuthor: (author, token) =>
+    dispatch(followUnfollowAuthor(author, token, "follow")),
+  unfollowAuthor: (author, token) =>
+    dispatch(followUnfollowAuthor(author, token, "unfollow"))
 });
 
 export default connect(
