@@ -1,9 +1,9 @@
 const expect = require("chai").expect;
 const request = require("supertest");
-const { ObjectID } = require("mongodb");
 
 const app = require("../server");
 const BlogPost = require("../models/blogPost");
+const User = require("../models/user");
 const {
   users,
   populateUsers,
@@ -130,6 +130,47 @@ describe("/blog", () => {
           .set("token", users[0].token)
           .send(updates)
           .expect(404)
+          .end(done);
+      });
+    });
+
+    describe("/like/:slug", () => {
+      beforeEach(function(done) {
+        this.timeout(0);
+        populateBlogPosts(done);
+      });
+
+      it("should like a post", done => {
+        request(app)
+          .patch(`/blog/like/${blogPosts[0].slug}`)
+          .set("token", users[1].token)
+          .expect(200)
+          .expect(res => {
+            expect(res.body.likedArticles.length).to.equal(1);
+          })
+          .end(done);
+      });
+
+      it("should not let a user like their own posts", done => {
+        request(app)
+          .patch(`/blog/like/${blogPosts[0].slug}`)
+          .set("token", users[0].token)
+          .expect(404)
+          .end(done);
+      });
+
+      it("should return a 404 for non-existent posts", done => {
+        request(app)
+          .patch(`/blog/like/imaginary`)
+          .set("token", users[0].token)
+          .expect(404)
+          .end(done);
+      });
+
+      it("should return 401 for unauthenticated requests", done => {
+        request(app)
+          .patch(`/blog/like/${blogPosts[0].slug}`)
+          .expect(401)
           .end(done);
       });
     });
