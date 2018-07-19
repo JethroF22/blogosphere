@@ -1,6 +1,7 @@
 const express = require("express");
 const _ = require("lodash");
 const slugify = require("slugify");
+const { ObjectID } = require("mongodb");
 
 const BlogPost = require("../models/blogPost");
 const User = require("../models/user");
@@ -30,7 +31,8 @@ router.post("/create", authenticate, (req, res) => {
           "body",
           "createdAt",
           "coverPhotoURL",
-          "slug"
+          "slug",
+          "_id"
         ])
       );
     })
@@ -59,7 +61,8 @@ router.get("/view/:slug", (req, res) => {
         "body",
         "createdAt",
         "coverPhotoURL",
-        "slug"
+        "slug",
+        "_id"
       ]);
 
       res.send({ blogPost });
@@ -79,7 +82,8 @@ router.get("/view", (req, res) => {
         "body",
         "createdAt",
         "coverPhotoURL",
-        "slug"
+        "slug",
+        "_id"
       ]);
       posts.push(blogPost);
     });
@@ -111,43 +115,59 @@ router.patch("/edit/:slug", authenticate, (req, res) => {
     });
 });
 
-router.patch("/like/:slug", authenticate, (req, res) => {
-  const slug = req.params.slug;
+router.patch("/like/", authenticate, (req, res) => {
+  const post = _.pick(req.body, ["_id", "slug", "title", "author"]);
+  post._id = new ObjectID(post._id);
 
-  BlogPost.findOneAndUpdate(
-    { slug, "author.username": { $ne: req.user.username } },
-    { $inc: { likes: 1 } },
-    { new: true }
-  )
-    .then(post => {
-      if (!post) {
-        return res.status(404).send({ msg: "Not found" });
+  User.findOne({
+    $and: [
+      {
+        username: req.user.username
+      },
+      {
+        username: {
+          $ne: post.author.username
+        }
       }
-      const likedArticle = _.pick(post, ["title", "_id", "slug"]);
-      User.findOneAndUpdate(
-        {
-          username: req.user.username,
-          likedArticles: { $nin: [likedArticle] }
-        },
-        { $push: { likedArticles: likedArticle } },
-        { new: true }
-      ).then(user => {
-        res.send(
-          _.pick(
-            user,
-            "email",
-            "username",
-            "photo",
-            "bio",
-            "followedAuthors",
-            "followers",
-            "_id",
-            "likedArticles"
-          )
-        );
-      });
-    })
-    .catch(err => res.status(400).send());
+    ],
+    likedArticles: { $nin: [post] }
+  }).then(user => {
+    if (!user) {
+      const msg =
+        post.author.username === req.user.username
+          ? "Users cannot like their own content"
+          : "This article has already been 'liked'";
+      return res.status(400).send({ msg });
+    }
+    BlogPost.findOneAndUpdate(
+      { slug: post.slug },
+      { $inc: { likes: 1 } },
+      { new: true }
+    )
+      .then(post => {
+        if (!post) {
+          return res.status(404).send({ msg: "Article not found" });
+        }
+        user.likedArticles.concat(_.pick(post, ["_id", "title", "slug"]));
+
+        user
+          .save()
+          .then(user =>
+            res.send(
+              _.pick(user, [
+                "email",
+                "username",
+                "photo",
+                "bio",
+                "followedAuthors",
+                "followers",
+                "likedArticles"
+              ])
+            )
+          );
+      })
+      .catch(err => res.status(400).send());
+  });
 });
 
 module.exports = router;
