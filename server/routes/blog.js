@@ -116,7 +116,8 @@ router.patch("/edit/:slug", authenticate, (req, res) => {
 });
 
 router.patch("/like/", authenticate, (req, res) => {
-  const post = _.pick(req.body, ["_id", "slug", "title", "author"]);
+  const post = _.pick(req.body, ["_id", "title", "slug"]);
+  const postAuthor = req.body.author;
   post._id = new ObjectID(post._id);
 
   User.findOne({
@@ -126,19 +127,30 @@ router.patch("/like/", authenticate, (req, res) => {
       },
       {
         username: {
-          $ne: post.author.username
+          $ne: postAuthor.username
         }
       }
-    ],
-    likedArticles: { $nin: [post] }
+    ]
   }).then(user => {
     if (!user) {
-      const msg =
-        post.author.username === req.user.username
-          ? "Users cannot like their own content"
-          : "This article has already been 'liked'";
-      return res.status(400).send({ msg });
+      return res
+        .status(400)
+        .send({ msg: "Users cannot like their own content" });
     }
+
+    let exists = false;
+    user.likedPosts.forEach(likedPost => {
+      if (likedPost.title === post.title) {
+        exists = true;
+      }
+    });
+
+    if (exists) {
+      return res
+        .status(400)
+        .send({ msg: "This article has already been liked" });
+    }
+
     BlogPost.findOneAndUpdate(
       { slug: post.slug },
       { $inc: { likes: 1 } },
@@ -148,23 +160,49 @@ router.patch("/like/", authenticate, (req, res) => {
         if (!post) {
           return res.status(404).send({ msg: "Article not found" });
         }
-        user.likedArticles.concat(_.pick(post, ["_id", "title", "slug"]));
+        user.likePost(post).then(() => res.status(200).send());
+      })
+      .catch(err => res.status(400).send());
+  });
+});
 
-        user
-          .save()
-          .then(user =>
-            res.send(
-              _.pick(user, [
-                "email",
-                "username",
-                "photo",
-                "bio",
-                "followedAuthors",
-                "followers",
-                "likedArticles"
-              ])
-            )
-          );
+router.patch("/unlike/", authenticate, (req, res) => {
+  const post = _.pick(req.body, ["_id", "title", "slug"]);
+  const postAuthor = req.body.author;
+  post._id = new ObjectID(post._id);
+
+  User.findOne({
+    $and: [
+      {
+        username: req.user.username
+      },
+      {
+        username: {
+          $ne: postAuthor.username
+        }
+      }
+    ],
+    likedPosts: {
+      $in: [post]
+    }
+  }).then(user => {
+    if (!user) {
+      const msg =
+        postAuthor.username === req.user.username
+          ? "Users cannot like their own content"
+          : "This article has not been 'liked' by this user";
+      return res.status(400).send({ msg });
+    }
+    BlogPost.findOneAndUpdate(
+      { slug: post.slug },
+      { $inc: { likes: -1 } },
+      { new: true }
+    )
+      .then(post => {
+        if (!post) {
+          return res.status(404).send({ msg: "Article not found" });
+        }
+        user.unlikePost(post).then(() => res.status(200).send());
       })
       .catch(err => res.status(400).send());
   });
