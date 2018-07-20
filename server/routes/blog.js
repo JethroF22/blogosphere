@@ -196,7 +196,7 @@ router.patch("/unlike/", authenticate, (req, res) => {
     )
       .then(post => {
         if (!post) {
-          return res.status(404).send({ msg: "Article not found" });
+          return res.status(404).send({ msg: "Post not found" });
         }
         user.unlikePost(post).then(() => res.status(200).send());
       })

@@ -170,8 +170,43 @@ describe("/blog", () => {
           .send(blogPosts[0])
           .expect(400)
           .expect(res => {
+            expect(res.body.msg).to.equal("This post has already been liked");
+          })
+          .end(done);
+      });
+
+      it("should return 401 for unauthenticated requests", done => {
+        request(app)
+          .patch(`/blog/like/`)
+          .expect(401)
+          .end(done);
+      });
+    });
+
+    describe("/unlike/", () => {
+      beforeEach(function(done) {
+        this.timeout(0);
+        populateBlogPosts(done);
+      });
+
+      it("should unlike a post", done => {
+        request(app)
+          .patch(`/blog/unlike/`)
+          .set("token", users[1].token)
+          .send(blogPosts[0])
+          .expect(200)
+          .end(done);
+      });
+
+      it("should return an error if the post has not been liked", done => {
+        request(app)
+          .patch(`/blog/unlike/`)
+          .set("token", users[0].token)
+          .send(blogPosts[1])
+          .expect(400)
+          .expect(res => {
             expect(res.body.msg).to.equal(
-              "This article has already been liked"
+              "This post has not been liked by this user"
             );
           })
           .end(done);
