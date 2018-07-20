@@ -29,7 +29,6 @@ export const startAuthentication = (userCredentials, type) => {
     })
       .then(response => {
         const data = response.data;
-        dispatch(getProfile(data.username));
         dispatch(
           setActionStatus({
             type: "SUCCESSFUL",
@@ -43,6 +42,8 @@ export const startAuthentication = (userCredentials, type) => {
             token: data.token
           })
         );
+        dispatch(setDetails(data));
+
         dispatch(setError(""));
 
         return data.token;

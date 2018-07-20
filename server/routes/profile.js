@@ -30,7 +30,16 @@ router.get("/:username", (req, res) => {
         res.status(404).send("User not found");
       }
 
-      res.send(_.pick(user, ["username", "bio", "photo"]));
+      res.send(
+        _.pick(user, [
+          "username",
+          "bio",
+          "photo",
+          "followers",
+          "followedAuthors",
+          "likedPosts"
+        ])
+      );
     })
     .catch(err => res.status(400).send());
 });
