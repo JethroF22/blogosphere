@@ -85,15 +85,18 @@ class ViewPostPage extends Component {
                 {moment(this.props.post.updatedAt).format("MMM Do YY")}
               </p>
             )}
-            {this.props.post.author !== this.props.username && (
-              <button
-                onClick={
-                  this.state.followed ? this.unfollowAuthor : this.followAuthor
-                }
-              >
-                {this.state.followed ? "Unfollow" : "Follow"} author
-              </button>
-            )}
+            {this.token &&
+              this.props.post.author !== this.props.username && (
+                <button
+                  onClick={
+                    this.state.followed
+                      ? this.unfollowAuthor
+                      : this.followAuthor
+                  }
+                >
+                  {this.state.followed ? "Unfollow" : "Follow"} author
+                </button>
+              )}
           </div>
         ) : (
           <p>Loading...</p>
