@@ -7,6 +7,7 @@ const BlogPost = require("../../models/blogPost");
 
 const userOneID = new ObjectID();
 const userTwoID = new ObjectID();
+const blogPostOneID = new ObjectID();
 
 const users = [
   {
@@ -28,7 +29,12 @@ const users = [
     photo:
       "https://images.pexels.com/photos/908298/pexels-photo-908298.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
     bio: "User 2 bio",
-    followedAuthors: [{ username: "User One", _id: userOneID }]
+    followedAuthors: [{ username: "User One", _id: userOneID }],
+    likedPosts: {
+      title: "Test 1",
+      slug: slugify("Test 1"),
+      _id: blogPostOneID
+    }
   }
 ];
 
@@ -49,7 +55,8 @@ const blogPosts = [
     author: {
       _id: userOneID,
       username: users[0].username
-    }
+    },
+    _id: blogPostOneID
   },
   {
     title: "Test 2",
