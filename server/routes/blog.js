@@ -146,9 +146,7 @@ router.patch("/like/", authenticate, (req, res) => {
     });
 
     if (exists) {
-      return res
-        .status(400)
-        .send({ msg: "This article has already been liked" });
+      return res.status(400).send({ msg: "This post has already been liked" });
     }
 
     BlogPost.findOneAndUpdate(
@@ -158,7 +156,7 @@ router.patch("/like/", authenticate, (req, res) => {
     )
       .then(post => {
         if (!post) {
-          return res.status(404).send({ msg: "Article not found" });
+          return res.status(404).send({ msg: "Post not found" });
         }
         user.likePost(post).then(() => res.status(200).send());
       })
@@ -175,24 +173,22 @@ router.patch("/unlike/", authenticate, (req, res) => {
     $and: [
       {
         username: req.user.username
-      },
-      {
-        username: {
-          $ne: postAuthor.username
-        }
       }
-    ],
-    likedPosts: {
-      $in: [post]
-    }
+    ]
   }).then(user => {
-    if (!user) {
-      const msg =
-        postAuthor.username === req.user.username
-          ? "Users cannot like their own content"
-          : "This article has not been 'liked' by this user";
-      return res.status(400).send({ msg });
+    let exists = false;
+    user.likedPosts.forEach(likedPost => {
+      if (likedPost.title === post.title) {
+        exists = true;
+      }
+    });
+
+    if (!exists) {
+      return res
+        .status(400)
+        .send({ msg: "This post has not been liked by this user" });
     }
+
     BlogPost.findOneAndUpdate(
       { slug: post.slug },
       { $inc: { likes: -1 } },
