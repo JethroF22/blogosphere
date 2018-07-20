@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { getPosts } from "../actions/blog";
 import { clearUserDetails } from "../actions/auth";
+import { clearProfileDetails } from "../actions/profile";
 import ArticleList from "./ArticleList";
 
 class HomePage extends Component {
@@ -15,6 +16,7 @@ class HomePage extends Component {
   clearUserDetails = e => {
     localStorage.removeItem("token");
     this.props.clearUserDetails();
+    this.props.clearProfileDetails();
   };
 
   render() {
@@ -54,7 +56,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getPosts: () => dispatch(getPosts()),
-  clearUserDetails: () => dispatch(clearUserDetails())
+  clearUserDetails: () => dispatch(clearUserDetails()),
+  clearProfileDetails: () => dispatch(clearProfileDetails())
 });
 
 export default connect(
