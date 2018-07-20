@@ -17,6 +17,8 @@ export const setDetails = ({
   likedPosts
 });
 
+export const clearProfileDetails = () => ({ type: "CLEAR_PROFILE_DETAILS" });
+
 export const createProfile = (details, token) => {
   return dispatch => {
     const url = `${process.env.API_URL}profile/create`;
