@@ -1,9 +1,9 @@
 const expect = require("chai").expect;
 const request = require("supertest");
+const ObjectID = require("mongodb").ObjectId;
 
 const app = require("../server");
 const BlogPost = require("../models/blogPost");
-const User = require("../models/user");
 const {
   users,
   populateUsers,
@@ -134,7 +134,7 @@ describe("/blog", () => {
       });
     });
 
-    describe("/like/:slug", () => {
+    describe("/like/", () => {
       beforeEach(function(done) {
         this.timeout(0);
         populateBlogPosts(done);
@@ -142,34 +142,44 @@ describe("/blog", () => {
 
       it("should like a post", done => {
         request(app)
-          .patch(`/blog/like/${blogPosts[0].slug}`)
-          .set("token", users[1].token)
+          .patch(`/blog/like/`)
+          .set("token", users[0].token)
+          .send(blogPosts[1])
           .expect(200)
-          .expect(res => {
-            expect(res.body.likedArticles.length).to.equal(1);
-          })
           .end(done);
       });
 
       it("should not let a user like their own posts", done => {
         request(app)
-          .patch(`/blog/like/${blogPosts[0].slug}`)
+          .patch(`/blog/like/`)
           .set("token", users[0].token)
-          .expect(404)
+          .send(blogPosts[0])
+          .expect(400)
+          .expect(res => {
+            expect(res.body.msg).to.equal(
+              "Users cannot like their own content"
+            );
+          })
           .end(done);
       });
 
-      it("should return a 404 for non-existent posts", done => {
+      it("should not allow a user to like the same post twice", done => {
         request(app)
-          .patch(`/blog/like/imaginary`)
-          .set("token", users[0].token)
-          .expect(404)
+          .patch(`/blog/like/`)
+          .set("token", users[1].token)
+          .send(blogPosts[0])
+          .expect(400)
+          .expect(res => {
+            expect(res.body.msg).to.equal(
+              "This article has already been liked"
+            );
+          })
           .end(done);
       });
 
       it("should return 401 for unauthenticated requests", done => {
         request(app)
-          .patch(`/blog/like/${blogPosts[0].slug}`)
+          .patch(`/blog/like/`)
           .expect(401)
           .end(done);
       });
