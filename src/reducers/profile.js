@@ -9,6 +9,11 @@ export default (state = {}, action) => {
         followers: action.followers,
         likedPosts: action.likedPosts
       };
+    case "UPDATE_LIKED_POSTS":
+      return {
+        ...state,
+        likedPosts: action.likedPosts
+      };
     case "CLEAR_PROFILE_DETAILS":
       return {};
     default:
