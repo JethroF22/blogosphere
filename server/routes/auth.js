@@ -25,7 +25,8 @@ router.post("/register", (req, res) => {
           "followedAuthors",
           "followers",
           "_id",
-          "likedPosts"
+          "likedPosts",
+          "token"
         )
       );
     })
@@ -53,7 +54,8 @@ router.post("/login", (req, res) => {
           "followedAuthors",
           "followers",
           "_id",
-          "likedPosts"
+          "likedPosts",
+          "token"
         )
       );
     })
