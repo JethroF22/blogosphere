@@ -66,6 +66,22 @@ const UserSchema = new mongoose.Schema({
         minLength: 6
       }
     }
+  ],
+  likedPosts: [
+    {
+      _id: {
+        required: true,
+        type: mongoose.Schema.Types.ObjectId
+      },
+      title: {
+        required: true,
+        type: String
+      },
+      slug: {
+        required: true,
+        type: String
+      }
+    }
   ]
 });
 
@@ -78,6 +94,26 @@ UserSchema.methods.generateAuthToken = function() {
   );
   user.token = token;
   return token;
+};
+
+UserSchema.methods.likePost = function(post) {
+  const user = this;
+
+  return user.update({
+    $push: {
+      likedPosts: post
+    }
+  });
+};
+
+UserSchema.methods.unlikePost = function(post) {
+  const user = this;
+
+  return user.update({
+    $pull: {
+      likedPosts: post
+    }
+  });
 };
 
 UserSchema.statics.findByCredentials = function({ email, password }) {

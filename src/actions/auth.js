@@ -1,7 +1,7 @@
 import axios from "axios";
 import setError from "./error";
 import setActionStatus from "./status";
-import { setDetails } from "./profile";
+import { setDetails, getProfile } from "./profile";
 
 export const setUserDetails = ({ username, email, id, token }) => ({
   type: "SET_DETAILS",
@@ -16,7 +16,12 @@ export const clearUserDetails = () => ({ type: "CLEAR_DETAILS" });
 export const startAuthentication = (userCredentials, type) => {
   return dispatch => {
     const url = `${process.env.API_URL}auth/${type}`;
-    dispatch(setActionStatus("IN_PROGRESS"));
+    dispatch(
+      setActionStatus({
+        type: "IN_PROGRESS",
+        name: "startAuthentication"
+      })
+    );
     return axios({
       url,
       data: userCredentials,
@@ -24,7 +29,12 @@ export const startAuthentication = (userCredentials, type) => {
     })
       .then(response => {
         const data = response.data;
-        dispatch(setActionStatus("SUCCESSFUL"));
+        dispatch(
+          setActionStatus({
+            type: "SUCCESSFUL",
+            name: "startAuthentication"
+          })
+        );
         dispatch(
           setUserDetails({
             username: data.username,
@@ -32,13 +42,20 @@ export const startAuthentication = (userCredentials, type) => {
             token: data.token
           })
         );
+        dispatch(setDetails(data));
+
         dispatch(setError(""));
 
         return data.token;
       })
       .catch(error => {
         dispatch(setError(error.response.data));
-        dispatch(setActionStatus("FAILED"));
+        dispatch(
+          setActionStatus({
+            type: "FAILED",
+            name: "startAuthentication"
+          })
+        );
       });
   };
 };
@@ -46,11 +63,21 @@ export const startAuthentication = (userCredentials, type) => {
 export const tokenAuthentication = token => {
   return dispatch => {
     const url = `${process.env.API_URL}auth/user_details`;
-    dispatch(setActionStatus("IN_PROGRESS"));
+    dispatch(
+      setActionStatus({
+        type: "IN_PROGRESS",
+        name: "tokenAuthentication"
+      })
+    );
     return axios({ url, method: "get", headers: { token } })
       .then(response => {
         const data = response.data;
-        dispatch(setActionStatus("SUCCESSFUL"));
+        dispatch(
+          setActionStatus({
+            type: "SUCCESSFUL",
+            name: "tokenAuthentication"
+          })
+        );
 
         dispatch(
           setUserDetails({
@@ -62,7 +89,12 @@ export const tokenAuthentication = token => {
         dispatch(setError(""));
       })
       .catch(error => {
-        dispatch(setActionStatus("FAILED"));
+        dispatch(
+          setActionStatus({
+            type: "FAILED",
+            name: "tokenAuthentication"
+          })
+        );
       });
   };
 };

@@ -1,5 +1,6 @@
-const setActionStatus = type => ({
-  type
+const setActionStatus = ({ type, name }) => ({
+  type,
+  name
 });
 
 export default setActionStatus;

@@ -10,9 +10,20 @@ export const setPosts = posts => ({
   posts
 });
 
+export const updatedLikedPosts = likedPosts => ({
+  type: "UPDATE_LIKED_POSTS",
+  likedPosts
+});
+
 export const createPost = (blogPost, token) => {
   return dispatch => {
     const url = `${process.env.API_URL}blog/create`;
+    dispatch(
+      setActionStatus({
+        type: "IN_PROGRESS",
+        name: "startAuthentication"
+      })
+    );
     return axios({
       url,
       data: blogPost,
@@ -29,12 +40,22 @@ export const createPost = (blogPost, token) => {
             author: data.author.name
           })
         );
-        dispatch(setActionStatus("SUCCESSFUL"));
+        dispatch(
+          setActionStatus({
+            type: "SUCCESSFUL",
+            name: "startAuthentication"
+          })
+        );
         dispatch(setError(""));
         return data.slug;
       })
       .catch(error => {
-        dispatch(setActionStatus("FAILED"));
+        dispatch(
+          setActionStatus({
+            type: "FAILED",
+            name: "startAuthentication"
+          })
+        );
         if (error.response.status === 400) {
           dispatch(setError(error.response.data.error));
         } else {
@@ -47,7 +68,12 @@ export const createPost = (blogPost, token) => {
 export const getPost = slug => {
   return dispatch => {
     const url = `${process.env.API_URL}blog/view/${slug}`;
-    dispatch(setActionStatus("IN_PROGRESS"));
+    dispatch(
+      setActionStatus({
+        type: "IN_PROGRESS",
+        name: "startAuthentication"
+      })
+    );
     return axios({
       url,
       method: "get"
@@ -59,10 +85,20 @@ export const getPost = slug => {
             ...data
           })
         );
-        dispatch(setActionStatus("SUCCESSFUL"));
+        dispatch(
+          setActionStatus({
+            type: "SUCCESSFUL",
+            name: "startAuthentication"
+          })
+        );
       })
       .catch(error => {
-        dispatch(setActionStatus("FAILED"));
+        dispatch(
+          setActionStatus({
+            type: "FAILED",
+            name: "startAuthentication"
+          })
+        );
       });
   };
 };
@@ -70,15 +106,30 @@ export const getPost = slug => {
 export const getPosts = () => {
   return dispatch => {
     const url = `${process.env.API_URL}blog/view`;
-    dispatch(setActionStatus("IN_PROGRESS"));
+    dispatch(
+      setActionStatus({
+        type: "IN_PROGRESS",
+        name: "startAuthentication"
+      })
+    );
     return axios({ url, method: "get" })
       .then(response => {
         const posts = response.data.posts;
         dispatch(setPosts(posts));
-        dispatch(setActionStatus("SUCCESSFUL"));
+        dispatch(
+          setActionStatus({
+            type: "SUCCESSFUL",
+            name: "startAuthentication"
+          })
+        );
       })
       .catch(error => {
-        dispatch(setActionStatus("FAILED"));
+        dispatch(
+          setActionStatus({
+            type: "FAILED",
+            name: "startAuthentication"
+          })
+        );
       });
   };
 };
@@ -86,6 +137,12 @@ export const getPosts = () => {
 export const editPost = (blogPost, token, slug) => {
   return dispatch => {
     const url = `${process.env.API_URL}blog/edit/${slug}`;
+    dispatch(
+      setActionStatus({
+        type: "IN_PROGRESS",
+        name: "startAuthentication"
+      })
+    );
     return axios({
       url,
       data: blogPost,
@@ -102,17 +159,68 @@ export const editPost = (blogPost, token, slug) => {
             author: post.author.username
           })
         );
-        dispatch(setActionStatus("SUCCESSFUL"));
+        dispatch(
+          setActionStatus({
+            type: "SUCCESSFUL",
+            name: "startAuthentication"
+          })
+        );
         dispatch(setError(""));
         return post.slug;
       })
       .catch(error => {
-        dispatch(setActionStatus("FAILED"));
+        dispatch(
+          setActionStatus({
+            type: "FAILED",
+            name: "startAuthentication"
+          })
+        );
         if (error.response.status === 400) {
           dispatch(setError(error.response.data.error));
         } else {
           console.log("Failed");
         }
+      });
+  };
+};
+
+export const likeUnlikePost = (post, token, type) => {
+  return (dispatch, getState) => {
+    const url = `${process.env.API_URL}blog/${type}/`;
+    console.log(url);
+    console.log(post);
+    dispatch(
+      setActionStatus({
+        type: "IN_PROGRESS",
+        name: "likeUnlikePost"
+      })
+    );
+    return axios({
+      url,
+      method: "patch",
+      headers: {
+        token
+      },
+      data: post
+    })
+      .then(res => {
+        dispatch(
+          setActionStatus({
+            type: "SUCCESSFUL",
+            name: "likeUnlikePost"
+          })
+        );
+        const likedPosts = getState().profile.likedPosts.concat(post);
+        console.log(likedPosts);
+        dispatch(updatedLikedPosts(likedPosts));
+      })
+      .catch(err => {
+        dispatch(
+          setActionStatus({
+            type: "FAILED",
+            name: "likeUnlikePost"
+          })
+        );
       });
   };
 };

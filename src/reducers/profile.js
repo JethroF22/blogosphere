@@ -6,7 +6,8 @@ export default (state = {}, action) => {
         photo: action.photo,
         bio: action.bio,
         followedAuthors: action.followedAuthors,
-        followers: action.followers
+        followers: action.followers,
+        likedPosts: action.likedPosts
       };
     case "CLEAR_PROFILE_DETAILS":
       return {};

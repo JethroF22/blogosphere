@@ -1,6 +1,6 @@
 const expect = require("chai").expect;
 const request = require("supertest");
-const { ObjectID } = require("mongodb");
+const ObjectID = require("mongodb").ObjectId;
 
 const app = require("../server");
 const BlogPost = require("../models/blogPost");
@@ -130,6 +130,92 @@ describe("/blog", () => {
           .set("token", users[0].token)
           .send(updates)
           .expect(404)
+          .end(done);
+      });
+    });
+
+    describe("/like/", () => {
+      beforeEach(function(done) {
+        this.timeout(0);
+        populateBlogPosts(done);
+      });
+
+      it("should like a post", done => {
+        request(app)
+          .patch(`/blog/like/`)
+          .set("token", users[0].token)
+          .send(blogPosts[1])
+          .expect(200)
+          .end(done);
+      });
+
+      it("should not let a user like their own posts", done => {
+        request(app)
+          .patch(`/blog/like/`)
+          .set("token", users[0].token)
+          .send(blogPosts[0])
+          .expect(400)
+          .expect(res => {
+            expect(res.body.msg).to.equal(
+              "Users cannot like their own content"
+            );
+          })
+          .end(done);
+      });
+
+      it("should not allow a user to like the same post twice", done => {
+        request(app)
+          .patch(`/blog/like/`)
+          .set("token", users[1].token)
+          .send(blogPosts[0])
+          .expect(400)
+          .expect(res => {
+            expect(res.body.msg).to.equal("This post has already been liked");
+          })
+          .end(done);
+      });
+
+      it("should return 401 for unauthenticated requests", done => {
+        request(app)
+          .patch(`/blog/like/`)
+          .expect(401)
+          .end(done);
+      });
+    });
+
+    describe("/unlike/", () => {
+      beforeEach(function(done) {
+        this.timeout(0);
+        populateBlogPosts(done);
+      });
+
+      it("should unlike a post", done => {
+        request(app)
+          .patch(`/blog/unlike/`)
+          .set("token", users[1].token)
+          .send(blogPosts[0])
+          .expect(200)
+          .end(done);
+      });
+
+      it("should return an error if the post has not been liked", done => {
+        request(app)
+          .patch(`/blog/unlike/`)
+          .set("token", users[0].token)
+          .send(blogPosts[1])
+          .expect(400)
+          .expect(res => {
+            expect(res.body.msg).to.equal(
+              "This post has not been liked by this user"
+            );
+          })
+          .end(done);
+      });
+
+      it("should return 401 for unauthenticated requests", done => {
+        request(app)
+          .patch(`/blog/like/`)
+          .expect(401)
           .end(done);
       });
     });

@@ -5,10 +5,12 @@ import { Link } from "react-router-dom";
 
 import { getPost } from "../actions/blog";
 import { followUnfollowAuthor } from "../actions/profile";
+import { likeUnlikePost } from "../actions/blog";
 
 class ViewPostPage extends Component {
   state = {
-    followed: false
+    followed: false,
+    liked: false
   };
 
   componentDidMount() {
@@ -22,6 +24,13 @@ class ViewPostPage extends Component {
               this.setState(() => ({
                 followed: true
               }));
+            }
+          });
+        }
+        if (this.props.likedPosts) {
+          this.props.likedPosts.forEach(post => {
+            if (post._id === this.props.post._id) {
+              this.setState(() => ({ liked: true }));
             }
           });
         }
@@ -55,6 +64,26 @@ class ViewPostPage extends Component {
       });
   };
 
+  likePost = e => {
+    this.props.likePost(this.props.post, this.props.token).then(() => {
+      if (this.props.actionStatus === "Action successful") {
+        console.log("liked");
+        this.setState(() => ({
+          liked: true
+        }));
+      }
+    });
+  };
+
+  unlikePost = e => {
+    this.props.unlikePost(this.props.post, this.props.token).then(() => {
+      if (this.props.actionStatus === "Action successful") {
+        console.log("unliked");
+        this.setState(() => ({ liked: false }));
+      }
+    });
+  };
+
   render() {
     return (
       <div>
@@ -85,15 +114,25 @@ class ViewPostPage extends Component {
                 {moment(this.props.post.updatedAt).format("MMM Do YY")}
               </p>
             )}
-            {this.props.post.author !== this.props.username && (
-              <button
-                onClick={
-                  this.state.followed ? this.unfollowAuthor : this.followAuthor
-                }
-              >
-                {this.state.followed ? "Unfollow" : "Follow"} author
-              </button>
-            )}
+            {this.props.token &&
+              (this.props.post.author !== this.props.username && (
+                <div>
+                  <button
+                    onClick={
+                      this.state.followed
+                        ? this.unfollowAuthor
+                        : this.followAuthor
+                    }
+                  >
+                    {this.state.followed ? "Unfollow" : "Follow"} author
+                  </button>
+                  <button
+                    onClick={this.state.liked ? this.unlikePost : this.likePost}
+                  >
+                    {this.state.liked ? "Unlike" : "Like"} post
+                  </button>
+                </div>
+              ))}
           </div>
         ) : (
           <p>Loading...</p>
@@ -108,7 +147,8 @@ const mapStateToProps = state => ({
   actionStatus: state.status.status,
   token: state.auth.token,
   username: state.auth.username,
-  followedAuthors: state.profile.followedAuthors
+  followedAuthors: state.profile.followedAuthors,
+  likedPosts: state.profile.likedPosts
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -116,7 +156,9 @@ const mapDispatchToProps = dispatch => ({
   followAuthor: (author, token) =>
     dispatch(followUnfollowAuthor(author, token, "follow")),
   unfollowAuthor: (author, token) =>
-    dispatch(followUnfollowAuthor(author, token, "unfollow"))
+    dispatch(followUnfollowAuthor(author, token, "unfollow")),
+  likePost: (post, token) => dispatch(likeUnlikePost(post, token, "like")),
+  unlikePost: (post, token) => dispatch(likeUnlikePost(post, token, "unlike"))
 });
 
 export default connect(

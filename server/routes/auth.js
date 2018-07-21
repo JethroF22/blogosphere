@@ -12,15 +12,23 @@ router.post("/register", (req, res) => {
 
   const user = new User(credentials);
   const token = user.generateAuthToken();
-  const responseObject = {
-    token,
-    username: user.username,
-    email: user.email
-  };
   user
     .save()
     .then(() => {
-      res.send(responseObject);
+      res.send(
+        _.pick(
+          user,
+          "email",
+          "username",
+          "photo",
+          "bio",
+          "followedAuthors",
+          "followers",
+          "_id",
+          "likedPosts",
+          "token"
+        )
+      );
     })
     .catch(err => {
       let errorMsg;
@@ -36,11 +44,20 @@ router.post("/login", (req, res) => {
 
   User.findByCredentials({ ...credentials })
     .then(user => {
-      res.send({
-        token: user.token,
-        username: user.username,
-        email: user.email
-      });
+      res.send(
+        _.pick(
+          user,
+          "email",
+          "username",
+          "photo",
+          "bio",
+          "followedAuthors",
+          "followers",
+          "_id",
+          "likedPosts",
+          "token"
+        )
+      );
     })
     .catch(() => {
       res.status(400).send("Invalid email/password combination");
@@ -56,7 +73,8 @@ router.get("/user_details", authenticate, (req, res) => {
     "bio",
     "followedAuthors",
     "followers",
-    "_id"
+    "_id",
+    "likedPosts"
   );
   res.send(user);
 });
