@@ -158,7 +158,9 @@ router.patch("/like/", authenticate, (req, res) => {
         if (!post) {
           return res.status(404).send({ msg: "Post not found" });
         }
-        user.likePost(post).then(() => res.status(200).send());
+        User.likePost(req.user, postAuthor, post).then(user =>
+          res.status(200).send()
+        );
       })
       .catch(err => res.status(400).send());
   });

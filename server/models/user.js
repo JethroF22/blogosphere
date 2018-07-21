@@ -104,23 +104,35 @@ UserSchema.methods.generateAuthToken = function() {
   return token;
 };
 
-UserSchema.methods.likePost = function(post) {
-  const user = this;
-
-  return user.update({
-    $push: {
-      likedPosts: post
-    }
-  });
-};
-
-UserSchema.methods.unlikePost = function(post) {
+UserSchema.methods.unlikePost = function(post, author) {
   const user = this;
 
   return user.update({
     $pull: {
       likedPosts: post
     }
+  });
+};
+
+UserSchema.statics.likePost = function(user, author, post) {
+  const User = this;
+
+  User.findOneAndUpdate(
+    { username: author.username },
+    {
+      $push: {
+        notifications: {
+          message: `${user.username} has liked your post "${post.title}"`
+        }
+      }
+    }
+  ).then(() => {
+    User.findOneAndUpdate(
+      { username: user.username },
+      { $push: { likedPosts: post } }
+    ).then(user => {
+      return user;
+    });
   });
 };
 
