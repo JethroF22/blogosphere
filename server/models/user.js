@@ -82,6 +82,14 @@ const UserSchema = new mongoose.Schema({
         type: String
       }
     }
+  ],
+  notifications: [
+    {
+      message: {
+        type: String,
+        required: true
+      }
+    }
   ]
 });
 
