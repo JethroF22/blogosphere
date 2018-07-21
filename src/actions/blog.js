@@ -10,6 +10,11 @@ export const setPosts = posts => ({
   posts
 });
 
+export const updatedLikedPosts = likedPosts => ({
+  type: "UPDATE_LIKED_POSTS",
+  likedPosts
+});
+
 export const createPost = (blogPost, token) => {
   return dispatch => {
     const url = `${process.env.API_URL}blog/create`;
@@ -175,6 +180,47 @@ export const editPost = (blogPost, token, slug) => {
         } else {
           console.log("Failed");
         }
+      });
+  };
+};
+
+export const likeUnlikePost = (post, token, type) => {
+  return (dispatch, getState) => {
+    const url = `${process.env.API_URL}blog/${type}/`;
+    console.log(url);
+    console.log(post);
+    dispatch(
+      setActionStatus({
+        type: "IN_PROGRESS",
+        name: "likeUnlikePost"
+      })
+    );
+    return axios({
+      url,
+      method: "patch",
+      headers: {
+        token
+      },
+      data: post
+    })
+      .then(res => {
+        dispatch(
+          setActionStatus({
+            type: "SUCCESSFUL",
+            name: "likeUnlikePost"
+          })
+        );
+        const likedPosts = getState().profile.likedPosts.concat(post);
+        console.log(likedPosts);
+        dispatch(updatedLikedPosts(likedPosts));
+      })
+      .catch(err => {
+        dispatch(
+          setActionStatus({
+            type: "FAILED",
+            name: "likeUnlikePost"
+          })
+        );
       });
   };
 };
