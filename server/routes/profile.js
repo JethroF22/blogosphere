@@ -69,7 +69,14 @@ router.patch("/follow/", authenticate, (req, res) => {
 
   User.findOneAndUpdate(
     { ...author, followers: { $nin: [follower] } },
-    { $push: { followers: follower } },
+    {
+      $push: {
+        followers: follower,
+        notifications: {
+          message: `${req.user.username} followed you`
+        }
+      }
+    },
     { new: true }
   )
     .then(user => {
