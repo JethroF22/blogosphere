@@ -6,8 +6,11 @@ import ArticleListItem from "./ArticleListItem";
 const ArticleList = props => (
   <div>
     {props.posts.map(post => (
-      <Link to={`/blog/view/${post.slug}`}>
-        <ArticleListItem post={post} key={Math.floor(Math.random() * 99999)} />
+      <Link
+        to={`/blog/view/${post.slug}`}
+        key={Math.floor(Math.random() * 99999)}
+      >
+        <ArticleListItem post={post} />
       </Link>
     ))}
   </div>

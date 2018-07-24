@@ -3,6 +3,7 @@ const _ = require("lodash");
 const { ObjectID } = require("mongodb");
 
 const User = require("../models/user");
+const BlogPost = require("../models/blogPost");
 const authenticate = require("../middleware/authenticate");
 
 const router = express.Router();
@@ -140,6 +141,26 @@ router.delete("/unfollow", authenticate, (req, res) => {
     })
     .catch(() => {
       res.status(400).send({ msg: "DB error" });
+    });
+});
+
+router.get("/posts/:author", (req, res) => {
+  const author = req.params.author;
+  console.log(author);
+
+  BlogPost.find({ "author.username": author })
+    .then(posts => {
+      if (!posts) {
+        return res
+          .status(404)
+          .send({ msg: "This user has not published any posts" });
+      }
+      console.log(posts);
+
+      res.send({ posts });
+    })
+    .catch(err => {
+      res.status(400).send({ error });
     });
 });
 

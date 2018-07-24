@@ -1,21 +1,27 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 
-import { getProfile } from "../actions/profile";
+import ArticleList from "./ArticleList";
+import {
+  getProfile,
+  clearProfileDetails,
+  getPostsByAuthor
+} from "../actions/profile";
 
 class ViewProfile extends Component {
   componentDidMount() {
-    if (!this.props.profile.photo && !this.props.profile.bio) {
-      const username = this.props.match.params.username;
-      console.log(username);
-      this.props.getProfile(username).then(() => {
-        if (this.props.actionStatus === "Action successful") {
-          console.log("Success");
-        } else {
-          console.log("Error");
-        }
-      });
-    }
+    const username = this.props.match.params.username;
+    this.props.getProfile(username).then(() => {
+      if (this.props.actionStatus === "Action successful") {
+        this.props.getPosts(username);
+      } else {
+        console.log("Error");
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this.props.clearProfile();
   }
 
   render() {
@@ -23,7 +29,26 @@ class ViewProfile extends Component {
       <div>
         <h1>{this.props.match.params.username}</h1>
         <img src={this.props.profile.photo} height="400" width="400" />
-        <p>{this.props.profile.bio}</p>
+        {this.props.profile.bio && <p>{this.props.profile.bio}</p>}
+        {this.props.profile.followers && (
+          <p>
+            {this.props.followersCount} follower{this.props.followersCount > 0
+              ? "s"
+              : ""}
+          </p>
+        )}
+        {this.props.publishedPosts.length > 0 && (
+          <Fragment>
+            <h2>Published Posts</h2>
+            <ArticleList posts={this.props.publishedPosts} />
+          </Fragment>
+        )}
+        {this.props.likedPosts.length > 0 && (
+          <Fragment>
+            <h2>Liked Posts</h2>
+            <ArticleList posts={this.props.likedPosts} />
+          </Fragment>
+        )}
       </div>
     );
   }
@@ -31,11 +56,16 @@ class ViewProfile extends Component {
 
 const mapStateToProps = state => ({
   profile: state.profile,
-  actionStatus: state.status.status
+  actionStatus: state.status.status,
+  followersCount: state.profile.followers ? state.profile.followers.length : 0,
+  likedPosts: state.profile.likedPosts || [],
+  publishedPosts: state.profile.publishedPosts || []
 });
 
 const mapDispatchToProps = dispatch => ({
-  getProfile: username => dispatch(getProfile(username))
+  getProfile: username => dispatch(getProfile(username)),
+  clearProfile: () => dispatch(clearProfileDetails()),
+  getPosts: username => dispatch(getPostsByAuthor(username))
 });
 
 export default connect(
