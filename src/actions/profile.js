@@ -19,6 +19,8 @@ export const setDetails = ({
 
 export const clearProfileDetails = () => ({ type: "CLEAR_PROFILE_DETAILS" });
 
+export const setPosts = posts => ({ type: "SET_POSTS", posts });
+
 export const createProfile = (details, token) => {
   return dispatch => {
     const url = `${process.env.API_URL}profile/create`;
@@ -160,6 +162,39 @@ export const followUnfollowAuthor = (author, token, type) => {
           setActionStatus({
             type: "FAILED",
             name: "followUnfollowAuthor"
+          })
+        );
+      });
+  };
+};
+
+export const getPostsByAuthor = author => {
+  return dispatch => {
+    const url = `${process.env.API_URL}profile/posts/${author}/`;
+    dispatch(
+      setActionStatus({
+        type: "IN_PROGRESS",
+        name: "getPostsByAuthor"
+      })
+    );
+    return axios({
+      url,
+      method: "get"
+    })
+      .then(res => {
+        dispatch(
+          setActionStatus({
+            type: "SUCCESSFUL",
+            name: "getPostsByAuthor"
+          })
+        );
+        dispatch(setPosts(res.data.posts));
+      })
+      .catch(err => {
+        dispatch(
+          setActionStatus({
+            type: "FAILED",
+            name: "getPostsByAuthor"
           })
         );
       });
