@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 
 import ArticleList from "./ArticleList";
@@ -37,10 +37,17 @@ class ViewProfile extends Component {
               : ""}
           </p>
         )}
-        {this.props.publishedPosts ? (
-          <ArticleList posts={this.props.publishedPosts} />
-        ) : (
-          "No posts to display"
+        {this.props.publishedPosts.length > 0 && (
+          <Fragment>
+            <h2>Published Posts</h2>
+            <ArticleList posts={this.props.publishedPosts} />
+          </Fragment>
+        )}
+        {this.props.likedPosts.length > 0 && (
+          <Fragment>
+            <h2>Liked Posts</h2>
+            <ArticleList posts={this.props.likedPosts} />
+          </Fragment>
         )}
       </div>
     );
@@ -51,7 +58,8 @@ const mapStateToProps = state => ({
   profile: state.profile,
   actionStatus: state.status.status,
   followersCount: state.profile.followers ? state.profile.followers.length : 0,
-  publishedPosts: state.profile.publishedPosts
+  likedPosts: state.profile.likedPosts || [],
+  publishedPosts: state.profile.publishedPosts || []
 });
 
 const mapDispatchToProps = dispatch => ({
