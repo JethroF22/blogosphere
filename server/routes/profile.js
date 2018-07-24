@@ -74,7 +74,8 @@ router.patch("/follow/", authenticate, (req, res) => {
       $push: {
         followers: follower,
         notifications: {
-          message: `${req.user.username} followed you`
+          message: `${req.user.username} followed you`,
+          timestamp: new Date()
         }
       }
     },

@@ -88,6 +88,10 @@ const UserSchema = new mongoose.Schema({
       message: {
         type: String,
         required: true
+      },
+      timestamp: {
+        type: Number,
+        required: true
       }
     }
   ]
@@ -122,7 +126,8 @@ UserSchema.statics.likePost = function(user, author, post) {
     {
       $push: {
         notifications: {
-          message: `${user.username} has liked your post "${post.title}"`
+          message: `${user.username} has liked your post "${post.title}"`,
+          timestamp: new Date()
         }
       }
     }
