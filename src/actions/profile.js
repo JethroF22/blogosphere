@@ -19,7 +19,7 @@ export const setDetails = ({
 
 export const clearProfileDetails = () => ({ type: "CLEAR_PROFILE_DETAILS" });
 
-export const setPosts = posts => ({ type: "SET_POSTS", posts });
+export const setPosts = posts => ({ type: "SET_PUBLISHED_POSTS", posts });
 
 export const createProfile = (details, token) => {
   return dispatch => {

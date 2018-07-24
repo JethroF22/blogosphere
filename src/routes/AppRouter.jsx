@@ -12,11 +12,13 @@ import EditPostPage from "../components/EditPostPage";
 import CreateProfile from "../components/CreateProfile";
 import ViewProfile from "../components/ViewProfile";
 import EditProfile from "../components/EditProfile";
+import Header from "../components/Header";
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <div>
+        <Header />
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route path="/register" component={RegistrationPage} />

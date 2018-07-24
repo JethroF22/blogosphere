@@ -11,11 +11,8 @@ export default (state = {}, action) => {
       };
     case "CLEAR_PROFILE_DETAILS":
       return {};
-    case "SET_POSTS":
-      return {
-        ...state,
-        publishedPosts: action.posts
-      };
+    case "SET_PUBLISHED_POSTS":
+      return { ...state, publishedPosts: action.posts };
     default:
       return state;
   }
