@@ -31,13 +31,10 @@
 
 .header__photo {
   border-radius: 50%;
-  position: relative;
-  top: 0;
-  right: 0;
   height: 50px;
   width: 50px;
 }
 
-.header_dropdown {
-  width: 100%;
+.header__links {
+  margin-right: $large-size;
 }
