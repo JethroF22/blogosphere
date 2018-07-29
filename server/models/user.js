@@ -121,22 +121,24 @@ UserSchema.methods.unlikePost = function(post, author) {
 UserSchema.statics.likePost = function(user, author, post) {
   const User = this;
 
-  User.findOneAndUpdate(
-    { username: author.username },
-    {
-      $push: {
-        notifications: {
-          message: `${user.username} has liked your post "${post.title}"`,
-          timestamp: new Date()
+  return new Promise((resolve, reject) => {
+    User.findOneAndUpdate(
+      { username: author.username },
+      {
+        $push: {
+          notifications: {
+            message: `${user.username} has liked your post "${post.title}"`,
+            timestamp: new Date()
+          }
         }
       }
-    }
-  ).then(() => {
-    User.findOneAndUpdate(
-      { username: user.username },
-      { $push: { likedPosts: post } }
-    ).then(user => {
-      return user;
+    ).then(() => {
+      User.findOneAndUpdate(
+        { username: user.username },
+        { $push: { likedPosts: post } }
+      ).then(user => {
+        return resolve(user);
+      });
     });
   });
 };
