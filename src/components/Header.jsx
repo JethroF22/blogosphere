@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 
 import { clearProfileDetails } from "../actions/profile";
 import { clearUserDetails } from "../actions/auth";
@@ -14,27 +16,72 @@ class PageHeader extends Component {
 
   render() {
     return (
-      <div>
+      <div className="header">
         <Link to="/">
-          <h3>Blogosphere</h3>
+          <h3 className="header__title">Blogosphere</h3>
         </Link>
-        {!this.props.token ? (
-          <Fragment>
-            <Link to="/register">
-              <p>Register</p>
-            </Link>
-            <Link to="/login">
-              <p>Login</p>
-            </Link>
-          </Fragment>
-        ) : (
-          <div>
-            <p>{this.props.username}</p>
-            <Link to="/blog/create">Create Post</Link>
-            <br />
-            <button onClick={this.clearUserDetails}>Log Out</button>
-          </div>
-        )}
+        <div className="header__right">
+          {!this.props.token ? (
+            <Fragment>
+              <Link to="/register" className="header__text header__links">
+                Register
+              </Link>
+              <Link to="/login" className="header__text header__links">
+                Login
+              </Link>
+            </Fragment>
+          ) : (
+            <Fragment>
+              <div className="uk-inline header__photo">
+                <button
+                  class="uk-button uk-button-default button"
+                  type="button"
+                >
+                  <div className="">
+                    {this.props.userPhoto ? (
+                      <img src={this.props.userPhoto} />
+                    ) : (
+                      <FontAwesomeIcon icon={faUserCircle} size="3x" />
+                    )}
+                  </div>
+                </button>
+                <div uk-dropdown="mode: click">
+                  <ul className="uk-nav uk-dropdown-nav">
+                    <li>
+                      <Link
+                        to={`/profile/view/${this.props.username}`}
+                        className="header__text"
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/blog/create" className="header__text">
+                        New Post
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to=""
+                        onClick={this.clearUserDetails}
+                        className="header__text"
+                      >
+                        Log Out
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* <p className="uk-navbar-item header__text">
+                {this.props.username}
+              </p> */}
+              {/* 
+              <br />
+              */}
+            </Fragment>
+          )}
+        </div>
       </div>
     );
   }
@@ -42,7 +89,8 @@ class PageHeader extends Component {
 
 const mapStateToProps = state => ({
   token: state.auth.token,
-  username: state.auth.username
+  username: state.auth.username,
+  userPhoto: state.profile.photo
 });
 
 const mapDispatchToProps = dispatch => ({
