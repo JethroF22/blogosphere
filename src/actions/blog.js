@@ -187,8 +187,6 @@ export const editPost = (blogPost, token, slug) => {
 export const likeUnlikePost = (post, token, type) => {
   return (dispatch, getState) => {
     const url = `${process.env.API_URL}blog/${type}/`;
-    console.log(url);
-    console.log(post);
     dispatch(
       setActionStatus({
         type: "IN_PROGRESS",
@@ -211,7 +209,6 @@ export const likeUnlikePost = (post, token, type) => {
           })
         );
         const likedPosts = getState().profile.likedPosts.concat(post);
-        console.log(likedPosts);
         dispatch(updatedLikedPosts(likedPosts));
       })
       .catch(err => {
@@ -221,6 +218,7 @@ export const likeUnlikePost = (post, token, type) => {
             name: "likeUnlikePost"
           })
         );
+        console.log(err.response);
       });
   };
 };
