@@ -52,6 +52,21 @@ const BlogPostSchema = new mongoose.Schema({
   }
 });
 
+BlogPostSchema.statics.findPostsByAuthors = function(authors) {
+  const BlogPost = this;
+  authors = authors.map(author => author.username);
+
+  return new Promise((resolve, reject) => {
+    BlogPost.find({
+      "author.username": {
+        $in: authors
+      }
+    }).then(posts => {
+      return resolve(posts);
+    });
+  });
+};
+
 const BlogPost = mongoose.model("BlogPost", BlogPostSchema);
 
 module.exports = BlogPost;
