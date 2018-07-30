@@ -7,14 +7,16 @@ export const setDetails = ({
   photo,
   followedAuthors,
   followers,
-  likedPosts
+  likedPosts,
+  postsByFollowedAuthors
 }) => ({
   type: "SET_PROFILE_DETAILS",
   bio,
   photo,
   followedAuthors,
   followers,
-  likedPosts
+  likedPosts,
+  postsByFollowedAuthors
 });
 
 export const clearProfileDetails = () => ({ type: "CLEAR_PROFILE_DETAILS" });
@@ -43,7 +45,7 @@ export const createProfile = (details, token) => {
         dispatch(
           setActionStatus({
             type: "SUCCESSFUL",
-            name: "startAuthentication"
+            name: "createProfile"
           })
         );
         dispatch(setDetails(res.data));

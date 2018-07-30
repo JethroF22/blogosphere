@@ -28,7 +28,7 @@ export const startAuthentication = (userCredentials, type) => {
       method: "post"
     })
       .then(response => {
-        const data = response.data;
+        const data = response.data.user;
         dispatch(
           setActionStatus({
             type: "SUCCESSFUL",
@@ -71,7 +71,7 @@ export const tokenAuthentication = token => {
     );
     return axios({ url, method: "get", headers: { token } })
       .then(response => {
-        const data = response.data;
+        const data = response.data.user;
         dispatch(
           setActionStatus({
             type: "SUCCESSFUL",
@@ -95,6 +95,7 @@ export const tokenAuthentication = token => {
             name: "tokenAuthentication"
           })
         );
+        console.log(error);
       });
   };
 };
