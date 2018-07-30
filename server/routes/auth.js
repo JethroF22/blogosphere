@@ -3,6 +3,7 @@ const _ = require("lodash");
 const { ObjectID } = require("mongodb");
 
 const User = require("../models/user");
+const BlogPost = require("../models/blogPost");
 const authenticate = require("../middleware/authenticate");
 
 const router = express.Router();
@@ -44,20 +45,26 @@ router.post("/login", (req, res) => {
 
   User.findByCredentials({ ...credentials })
     .then(user => {
-      res.send(
-        _.pick(
-          user,
-          "email",
-          "username",
-          "photo",
-          "bio",
-          "followedAuthors",
-          "followers",
-          "_id",
-          "likedPosts",
-          "token"
-        )
+      const postsByFollowedAuthors = BlogPost.findPostsByAuthors(
+        user.followedAuthors
       );
+      res.send({
+        user: {
+          ..._.pick(
+            user,
+            "email",
+            "username",
+            "photo",
+            "bio",
+            "followedAuthors",
+            "followers",
+            "_id",
+            "likedPosts",
+            "token"
+          ),
+          postsByFollowedAuthors
+        }
+      });
     })
     .catch(() => {
       res.status(400).send("Invalid email/password combination");
@@ -76,7 +83,10 @@ router.get("/user_details", authenticate, (req, res) => {
     "_id",
     "likedPosts"
   );
-  res.send(user);
+  BlogPost.findPostsByAuthors(user.followedAuthors).then(
+    postsByFollowedAuthors =>
+      res.send({ user: { ...user, postsByFollowedAuthors } })
+  );
 });
 
 module.exports = router;
