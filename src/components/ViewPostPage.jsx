@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import Parser from "html-react-parser";
+import marked from "marked";
 
 import { getPost } from "../actions/blog";
 import { followUnfollowAuthor } from "../actions/profile";
@@ -79,23 +81,24 @@ class ViewPostPage extends Component {
               >
                 {this.props.post.author.username}{" "}
               </Link>
-              on {moment(this.props.post.createdAt).format("MMM Do YY")}
+              on {moment(this.props.post.createdAt).format("MMM Do YYYY")}
             </p>
+            {this.props.post.updatedAt && (
+              <p className="post__subtitle">
+                Last updated on{" "}
+                {moment(this.props.post.updatedAt).format("MMM Do YYYY")}
+              </p>
+            )}
             <img
               uk-img={`dataSrc: ${this.props.post.coverPhotoURL}`}
               className="post__image"
             />
 
-            <p className="post__body">{this.props.post.body}</p>
-            {this.props.post.updatedAt && (
-              <p>
-                Updated on{" "}
-                {moment(this.props.post.updatedAt).format("MMM Do YY")}
-              </p>
-            )}
+            <p className="post__body">{Parser(marked(this.props.post.body))}</p>
+
             <hr className="uk-divider-icon" />
             {this.props.token ? (
-              this.props.post.author !== this.props.username && (
+              this.props.post.author.username !== this.props.username && (
                 <div className="post__button-container">
                   <button
                     className="uk-button uk-button-default button"
