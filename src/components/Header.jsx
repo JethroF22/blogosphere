@@ -34,7 +34,7 @@ class PageHeader extends Component {
             <Fragment>
               <div className="uk-inline header__photo">
                 <button
-                  class="uk-button uk-button-default button"
+                  className="uk-button uk-button-default button"
                   type="button"
                 >
                   <div className="">
@@ -72,13 +72,6 @@ class PageHeader extends Component {
                   </ul>
                 </div>
               </div>
-
-              {/* <p className="uk-navbar-item header__text">
-                {this.props.username}
-              </p> */}
-              {/* 
-              <br />
-              */}
             </Fragment>
           )}
         </div>

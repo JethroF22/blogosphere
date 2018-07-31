@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import ArticleListItem from "./ArticleListItem";
 
 const ArticleList = props => (
-  <div>
+  <div className="article-list">
     {props.posts.map(post => (
       <Link
         to={`/blog/view/${post.slug}`}

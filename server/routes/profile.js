@@ -19,7 +19,6 @@ router.post("/create", authenticate, (req, res) => {
       res.send(_.pick(user, ["photo", "bio"]));
     })
     .catch(err => {
-      console.log(err);
       res.status(400).send();
     });
 });
@@ -97,9 +96,24 @@ router.patch("/follow/", authenticate, (req, res) => {
             .send({ msg: "This author is already being followed" });
         }
 
-        res.send(
-          _.pick(user, ["username", "bio", "photo", "email", "followedAuthors"])
+        const postsByFollowedAuthors = BlogPost.findPostsByAuthors(
+          user.followedAuthors
         );
+
+        res.send({
+          user: {
+            ..._.pick(user, [
+              "username",
+              "bio",
+              "photo",
+              "email",
+              "followedAuthors",
+              "likedPosts",
+              "followers"
+            ]),
+            postsByFollowedAuthors
+          }
+        });
       });
     })
     .catch(() => {
@@ -135,9 +149,24 @@ router.delete("/unfollow", authenticate, (req, res) => {
             .send({ msg: "This author is not being followed" });
         }
 
-        res.send(
-          _.pick(user, ["username", "bio", "photo", "email", "followedAuthors"])
+        const postsByFollowedAuthors = BlogPost.findPostsByAuthors(
+          user.followedAuthors
         );
+
+        res.send({
+          user: {
+            ..._.pick(user, [
+              "username",
+              "bio",
+              "photo",
+              "email",
+              "followedAuthors",
+              "likedPosts",
+              "followers"
+            ]),
+            postsByFollowedAuthors
+          }
+        });
       });
     })
     .catch(() => {
@@ -147,7 +176,6 @@ router.delete("/unfollow", authenticate, (req, res) => {
 
 router.get("/posts/:author", (req, res) => {
   const author = req.params.author;
-  console.log(author);
 
   BlogPost.find({ "author.username": author })
     .then(posts => {
@@ -156,7 +184,6 @@ router.get("/posts/:author", (req, res) => {
           .status(404)
           .send({ msg: "This user has not published any posts" });
       }
-      console.log(posts);
 
       res.send({ posts });
     })

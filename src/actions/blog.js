@@ -21,7 +21,7 @@ export const createPost = (blogPost, token) => {
     dispatch(
       setActionStatus({
         type: "IN_PROGRESS",
-        name: "startAuthentication"
+        name: "createPost"
       })
     );
     return axios({
@@ -43,7 +43,7 @@ export const createPost = (blogPost, token) => {
         dispatch(
           setActionStatus({
             type: "SUCCESSFUL",
-            name: "startAuthentication"
+            name: "createPost"
           })
         );
         dispatch(setError(""));
@@ -53,7 +53,7 @@ export const createPost = (blogPost, token) => {
         dispatch(
           setActionStatus({
             type: "FAILED",
-            name: "startAuthentication"
+            name: "createPost"
           })
         );
         if (error.response.status === 400) {
@@ -71,7 +71,7 @@ export const getPost = slug => {
     dispatch(
       setActionStatus({
         type: "IN_PROGRESS",
-        name: "startAuthentication"
+        name: "getPost"
       })
     );
     return axios({
@@ -88,7 +88,7 @@ export const getPost = slug => {
         dispatch(
           setActionStatus({
             type: "SUCCESSFUL",
-            name: "startAuthentication"
+            name: "getPost"
           })
         );
       })
@@ -96,7 +96,7 @@ export const getPost = slug => {
         dispatch(
           setActionStatus({
             type: "FAILED",
-            name: "startAuthentication"
+            name: "getPost"
           })
         );
       });
@@ -109,7 +109,7 @@ export const getPosts = () => {
     dispatch(
       setActionStatus({
         type: "IN_PROGRESS",
-        name: "startAuthentication"
+        name: "getPosts"
       })
     );
     return axios({ url, method: "get" })
@@ -119,7 +119,7 @@ export const getPosts = () => {
         dispatch(
           setActionStatus({
             type: "SUCCESSFUL",
-            name: "startAuthentication"
+            name: "getPosts"
           })
         );
       })
@@ -127,7 +127,7 @@ export const getPosts = () => {
         dispatch(
           setActionStatus({
             type: "FAILED",
-            name: "startAuthentication"
+            name: "getPosts"
           })
         );
       });
@@ -140,7 +140,7 @@ export const editPost = (blogPost, token, slug) => {
     dispatch(
       setActionStatus({
         type: "IN_PROGRESS",
-        name: "startAuthentication"
+        name: "editPost"
       })
     );
     return axios({
@@ -162,7 +162,7 @@ export const editPost = (blogPost, token, slug) => {
         dispatch(
           setActionStatus({
             type: "SUCCESSFUL",
-            name: "startAuthentication"
+            name: "editPost"
           })
         );
         dispatch(setError(""));
@@ -172,7 +172,7 @@ export const editPost = (blogPost, token, slug) => {
         dispatch(
           setActionStatus({
             type: "FAILED",
-            name: "startAuthentication"
+            name: "editPost"
           })
         );
         if (error.response.status === 400) {
@@ -187,8 +187,6 @@ export const editPost = (blogPost, token, slug) => {
 export const likeUnlikePost = (post, token, type) => {
   return (dispatch, getState) => {
     const url = `${process.env.API_URL}blog/${type}/`;
-    console.log(url);
-    console.log(post);
     dispatch(
       setActionStatus({
         type: "IN_PROGRESS",
@@ -211,7 +209,6 @@ export const likeUnlikePost = (post, token, type) => {
           })
         );
         const likedPosts = getState().profile.likedPosts.concat(post);
-        console.log(likedPosts);
         dispatch(updatedLikedPosts(likedPosts));
       })
       .catch(err => {
@@ -221,6 +218,7 @@ export const likeUnlikePost = (post, token, type) => {
             name: "likeUnlikePost"
           })
         );
+        console.log(err.response);
       });
   };
 };
