@@ -45,26 +45,27 @@ router.post("/login", (req, res) => {
 
   User.findByCredentials({ ...credentials })
     .then(user => {
-      const postsByFollowedAuthors = BlogPost.findPostsByAuthors(
-        user.followedAuthors
-      );
-      res.send({
-        user: {
-          ..._.pick(
-            user,
-            "email",
-            "username",
-            "photo",
-            "bio",
-            "followedAuthors",
-            "followers",
-            "_id",
-            "likedPosts",
-            "token"
-          ),
-          postsByFollowedAuthors
+      BlogPost.findPostsByAuthors(user.followedAuthors).then(
+        postsByFollowedAuthors => {
+          res.send({
+            user: {
+              ..._.pick(
+                user,
+                "email",
+                "username",
+                "photo",
+                "bio",
+                "followedAuthors",
+                "followers",
+                "_id",
+                "likedPosts",
+                "token"
+              ),
+              postsByFollowedAuthors
+            }
+          });
         }
-      });
+      );
     })
     .catch(() => {
       res.status(400).send("Invalid email/password combination");

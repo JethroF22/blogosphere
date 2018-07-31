@@ -58,7 +58,7 @@ const mapStateToProps = state => ({
     ? state.profile.postsByFollowedAuthors.sort(
         (a, b) => a.createdAt < b.createdAt
       )
-    : [],
+    : null,
   mostPopularPosts:
     state.profile.posts && state.profile.posts.sort((a, b) => a.likes < b.likes)
 });

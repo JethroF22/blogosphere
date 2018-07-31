@@ -34,7 +34,7 @@ class PageHeader extends Component {
             <Fragment>
               <div className="uk-inline header__photo">
                 <button
-                  className="uk-button uk-button-default button"
+                  className="uk-button uk-button-default button button--dropdown"
                   type="button"
                 >
                   <div className="">
@@ -45,7 +45,7 @@ class PageHeader extends Component {
                     )}
                   </div>
                 </button>
-                <div uk-dropdown="mode: click">
+                <div uk-dropdown="mode: hover; delay-hide: 300">
                   <ul className="uk-nav uk-dropdown-nav">
                     <li>
                       <Link

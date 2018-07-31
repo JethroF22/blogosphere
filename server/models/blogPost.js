@@ -22,7 +22,8 @@ const BlogPostSchema = new mongoose.Schema({
     validator: {
       validator: validator.isURL,
       message: "{VALUE} is not a valid URL"
-    }
+    },
+    required: true
   },
   createdAt: {
     type: Number,
