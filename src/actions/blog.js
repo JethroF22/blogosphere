@@ -36,8 +36,7 @@ export const createPost = (blogPost, token) => {
         const data = response.data;
         dispatch(
           setCurrentPost({
-            ...data,
-            author: data.author.name
+            ...data
           })
         );
         dispatch(
