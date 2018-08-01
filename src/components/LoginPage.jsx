@@ -1,65 +1,111 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
+import validator from "validator";
 
 import { startAuthentication } from "../actions/auth";
 
 export class LoginPage extends Component {
   state = {
     password: "",
-    email: ""
+    email: "",
+    errors: {}
   };
 
   onEmailChange = e => {
     const email = e.target.value;
-    this.setState(() => ({
-      email
+    this.setState(prevState => ({
+      email,
+      errors: {
+        ...prevState.errors,
+        email: ""
+      }
     }));
   };
 
   onPasswordChange = e => {
     const password = e.target.value;
-    this.setState(() => ({
-      password
+    this.setState(prevState => ({
+      password,
+      errors: {
+        ...prevState.errors,
+        password: ""
+      }
     }));
   };
 
   onSubmit = e => {
     e.preventDefault();
 
-    this.props.login(_.pick(this.state, ["email", "password"])).then(token => {
-      if (this.props.actionStatus === "Action successful") {
-        localStorage.setItem("token", token);
-        this.props.history.push("/");
+    const isValidEmail =
+      !this.state.email === "" && validator.isEmail(this.state.email);
+    const isValidPassword = !(this.state.password === "");
+
+    if (isValidPassword && isValidEmail) {
+      this.props
+        .login(_.pick(this.state, ["email", "password"]))
+        .then(token => {
+          if (this.props.actionStatus === "Action successful") {
+            localStorage.setItem("token", token);
+            this.props.history.push("/");
+          }
+        });
+    } else {
+      const errors = {};
+      if (!isValidEmail) {
+        errors.email =
+          "Please enter the email you used to register your account";
       }
-    });
+      if (!isValidPassword) {
+        errors.password = "Please enter your password";
+      }
+      this.setState(() => ({ errors }));
+    }
   };
 
   render() {
     return (
-      <div>
-        <h1>Login</h1>
-        <form onSubmit={this.onSubmit}>
+      <div className="form">
+        <h1 className="form__title">Login</h1>
+        <form onSubmit={this.onSubmit} className="uk-form-stacked">
           {this.props.authenticationError && (
-            <p>{this.props.authenticationError}</p>
+            <p className="form__error">{this.props.authenticationError}</p>
           )}
-          <label htmlFor="email">Email: </label>
+          <label htmlFor="email" className="form__label">
+            Email:{" "}
+          </label>
+          {this.state.errors.email && (
+            <p className="form__error">{this.state.errors.email}</p>
+          )}
           <input
             type="text"
             name="email"
             value={this.state.email}
             onChange={this.onEmailChange}
+            className={`uk-input form__input ${
+              this.state.errors.email ? "uk-form-danger" : "uk-form-blank"
+            }`}
           />
           <br />
-          <label htmlFor="password">Password: </label>
+          <label htmlFor="password" className="form__label">
+            Password:{" "}
+          </label>
+          {this.state.errors.password && (
+            <p className="form__error">{this.state.errors.password}</p>
+          )}
           <input
             type="password"
             name="password"
             value={this.state.password}
             onChange={this.onPasswordChange}
+            className={`uk-input form__input ${
+              this.state.errors.password ? "uk-form-danger" : "uk-form-blank"
+            }`}
           />
           <br />
-          <button type="submit">Submit</button>
+          <button type="submit" className="uk-button uk-button-default button">
+            Submit
+          </button>
         </form>
       </div>
     );
