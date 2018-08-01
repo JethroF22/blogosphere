@@ -38,8 +38,8 @@ export class LoginPage extends Component {
     e.preventDefault();
 
     const isValidEmail =
-      !this.state.email === "" && validator.isEmail(this.state.email);
-    const isValidPassword = !(this.state.password === "");
+      this.state.email && validator.isEmail(this.state.email);
+    const isValidPassword = this.state.password;
 
     if (isValidPassword && isValidEmail) {
       this.props
