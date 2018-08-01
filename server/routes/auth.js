@@ -16,20 +16,22 @@ router.post("/register", (req, res) => {
   user
     .save()
     .then(() => {
-      res.send(
-        _.pick(
-          user,
-          "email",
-          "username",
-          "photo",
-          "bio",
-          "followedAuthors",
-          "followers",
-          "_id",
-          "likedPosts",
-          "token"
-        )
-      );
+      res.send({
+        user: {
+          ..._.pick(
+            user,
+            "email",
+            "username",
+            "photo",
+            "bio",
+            "followedAuthors",
+            "followers",
+            "_id",
+            "likedPosts",
+            "token"
+          )
+        }
+      });
     })
     .catch(err => {
       let errorMsg;
