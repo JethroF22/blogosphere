@@ -63,40 +63,59 @@ class EditProfile extends Component {
         });
     } else {
       const errors = {};
-      ["photo", "bio"].forEach(field => {
-        if (this.state[field] === "") {
-          errors[field] = `"${field}" cannot be blank`;
-        }
-        this.setState(() => ({ errors }));
-      });
+      if (this.state.photo === "" || !validator.isURL(this.state.photo)) {
+        errors.photo = "Please provide a link to valid image URL";
+      }
+      if (this.state.bio === "") {
+        errors.bio = "Your bio cannot be blank";
+      }
+      this.setState(() => ({ errors }));
     }
   };
 
   render() {
     return (
-      <div>
-        <form onSubmit={this.onSubmit}>
-          <h1>Complete your profile</h1>
-          {this.state.errors.action && <p>{this.state.errors.action}</p>}
-          <label htmlFor="photo">Photo: </label>
+      <div className="form">
+        <form onSubmit={this.onSubmit} className="uk-form-stacked">
+          <h1 className="form__title">Update your profile</h1>
+          {this.state.errors.action && (
+            <p className="form__error">{this.state.errors.action}</p>
+          )}
+          <label htmlFor="photo" className="form__label">
+            Photo:{" "}
+          </label>
           <input
             type="text"
             name="photo"
             value={this.state.photo}
             onChange={this.onPhotoChange}
             placeholder="Image URL"
+            className={`uk-input form__input ${
+              this.state.errors.bio ? "uk-form-danger" : "uk-form-blank"
+            }`}
           />
-          {this.state.errors.photo && <p>{this.state.errors.photo}</p>}
+          {this.state.errors.photo && (
+            <p className="form__error">{this.state.errors.photo}</p>
+          )}
 
-          <label htmlFor="bio">Bio: </label>
+          <label htmlFor="bio" className="form__label">
+            Bio:{" "}
+          </label>
           <Textarea
             name="bio"
             onChange={this.onBioChange}
             value={this.state.bio}
             placeholder="Tell us more about yourself..."
+            className={`uk-textarea form__textarea ${
+              this.state.errors.bio ? "uk-form-danger" : "uk-form-blank"
+            }`}
           />
-          {this.state.errors.bio && <p>{this.state.errors.bio}</p>}
-          <button type="submit">Edit Profile</button>
+          {this.state.errors.bio && (
+            <p className="form__error">{this.state.errors.bio}</p>
+          )}
+          <button type="submit" className="uk-button uk-button-default button">
+            Edit Profile
+          </button>
         </form>
       </div>
     );

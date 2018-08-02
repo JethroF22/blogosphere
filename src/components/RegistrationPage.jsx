@@ -16,29 +16,45 @@ export class RegistrationPage extends Component {
 
   onEmailChange = e => {
     const email = e.target.value;
-    this.setState(() => ({
-      email
+    this.setState(prevState => ({
+      email,
+      errors: {
+        ...prevState.errors,
+        email: ""
+      }
     }));
   };
 
   onUsernameChange = e => {
     const username = e.target.value;
-    this.setState(() => ({
-      username
+    this.setState(prevState => ({
+      username,
+      errors: {
+        ...prevState.errors,
+        username: ""
+      }
     }));
   };
 
   onPasswordChange = e => {
     const password = e.target.value;
-    this.setState(() => ({
-      password
+    this.setState(prevState => ({
+      password,
+      errors: {
+        ...prevState.errors,
+        password: ""
+      }
     }));
   };
 
   onConfirmPasswordChange = e => {
     const confirmPassword = e.target.value;
-    this.setState(() => ({
-      confirmPassword
+    this.setState(prevState => ({
+      confirmPassword,
+      errors: {
+        ...prevState.errors,
+        confirmPassword: ""
+      }
     }));
   };
 
@@ -62,54 +78,86 @@ export class RegistrationPage extends Component {
 
   render() {
     return (
-      <div>
-        <h1>Create An Account</h1>
-        <form onSubmit={this.onSubmit}>
+      <div className="form">
+        <h1 className="form__title">Create An Account</h1>
+        <form onSubmit={this.onSubmit} className="uk-form-stacked">
           {this.props.authenticationError && (
-            <p>{this.props.authenticationError}</p>
+            <p className="form__error">{this.props.authenticationError}</p>
           )}
-          <label htmlFor="username">Username: </label>
+
+          <label htmlFor="username" className="form__label">
+            Username:{" "}
+          </label>
+          {this.state.errors.username && (
+            <p className="form__error">{this.state.errors.username}</p>
+          )}
           <input
             type="text"
             name="username"
             value={this.state.username}
             onChange={this.onUsernameChange}
+            className={`uk-input form__input ${
+              this.state.errors.username ? "uk-form-danger" : "uk-form-blank"
+            }`}
           />
-          {this.state.errors.username && <p>{this.state.errors.username}</p>}
+
           <br />
-          <label htmlFor="email">Email: </label>
+          <label htmlFor="email" className="form__label">
+            Email:{" "}
+          </label>
+          {this.state.errors.email && (
+            <p className="form__error">{this.state.errors.email}</p>
+          )}
           <input
             type="text"
             name="email"
             value={this.state.email}
             onChange={this.onEmailChange}
+            className={`uk-input form__input ${
+              this.state.errors.email ? "uk-form-danger" : "uk-form-blank"
+            }`}
           />
-          {this.state.errors.email && <p>{this.state.errors.email}</p>}
 
           <br />
-          <label htmlFor="password">Password: </label>
+          <label htmlFor="password" className="form__label">
+            Password:{" "}
+          </label>
+          {this.state.errors.password && (
+            <p className="form__error">{this.state.errors.password}</p>
+          )}
           <input
             type="password"
             name="password"
             value={this.state.password}
             onChange={this.onPasswordChange}
+            className={`uk-input form__input ${
+              this.state.errors.password ? "uk-form-danger" : "uk-form-blank"
+            }`}
           />
-          {this.state.errors.password && <p>{this.state.errors.password}</p>}
 
           <br />
-          <label htmlFor="confirmPassword">Confirm Password: </label>
+          <label htmlFor="confirmPassword" className="form__label">
+            Confirm Password:{" "}
+          </label>
+          {this.state.errors.confirmPassword && (
+            <p className="form__error">{this.state.errors.confirmPassword}</p>
+          )}
           <input
             type="password"
             name="confirmPassword"
             value={this.state.confirmPassword}
             onChange={this.onConfirmPasswordChange}
+            className={`uk-input form__input ${
+              this.state.errors.confirmPassword
+                ? "uk-form-danger"
+                : "uk-form-blank"
+            }`}
           />
-          {this.state.errors.confirmPassword && (
-            <p>{this.state.errors.confirmPassword}</p>
-          )}
 
           <br />
-          <button type="submit">Submit</button>
+          <button type="submit" className="uk-button uk-button-default button">
+            Submit
+          </button>
         </form>
       </div>
     );

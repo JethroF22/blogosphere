@@ -96,19 +96,13 @@ router.patch("/edit/:slug", authenticate, (req, res) => {
   const updates = _.pick(req.body, ["body", "coverPhotoURL"]);
   updates["updatedAt"] = new Date();
 
-  BlogPost.findOne({ slug })
+  BlogPost.findOneAndUpdate({ slug }, { $set: updates }, { new: true })
     .then(post => {
-      if (post) {
-        BlogPost.findOneAndUpdate(
-          { slug },
-          { $set: updates },
-          { new: true }
-        ).then(post => {
-          return res.send({ post });
-        });
-      } else {
-        res.status(404).send("Post not found");
+      if (!post) {
+        return res.status(404).send("Post not found");
       }
+
+      return res.send({ post });
     })
     .catch(error => {
       res.status(400).send();

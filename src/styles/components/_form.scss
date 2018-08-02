@@ -1,0 +1,26 @@
+.form {
+  margin: $medium-size auto;
+  width: 60%;
+}
+
+.form__title {
+  font-family: $sans-serif;
+}
+
+.form__textarea {
+  min-height: 15vh !important;
+  resize: none;
+}
+
+.form__error {
+  color: $red;
+  margin-bottom: $small-size;
+  font-size: $font-medium;
+}
+
+.form__label,
+.form__input,
+.form__textarea {
+  font-size: $font-large;
+  margin-bottom: $small-size;
+}

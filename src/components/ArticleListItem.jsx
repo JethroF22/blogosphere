@@ -6,7 +6,7 @@ const ArticleListItem = props => (
     <div className="uk-card-header">
       <h3 className="article-list__title">{props.post.title}</h3>
       <p className="article-list__subtitle">
-        Created on {moment(props.post.createdAt).format("MMMM Do YYYY")}
+        Published on {moment(props.post.createdAt).format("MMMM Do YYYY")}
       </p>
     </div>
     <div className="uk-card-media-bottom">

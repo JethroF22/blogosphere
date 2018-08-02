@@ -29,16 +29,22 @@ router.get("/:username", (req, res) => {
       if (!user) {
         res.status(404).send("User not found");
       }
-
-      res.send(
-        _.pick(user, [
-          "username",
-          "bio",
-          "photo",
-          "followers",
-          "followedAuthors",
-          "likedPosts"
-        ])
+      BlogPost.findPostsByAuthors(user.followedAuthors).then(
+        postsByFollowedAuthors => {
+          res.send({
+            user: {
+              ..._.pick(user, [
+                "username",
+                "bio",
+                "photo",
+                "followers",
+                "followedAuthors",
+                "likedPosts"
+              ]),
+              postsByFollowedAuthors
+            }
+          });
+        }
       );
     })
     .catch(err => res.status(400).send());

@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 import ArticleList from "./ArticleList";
 import {
@@ -28,6 +29,9 @@ class ViewProfile extends Component {
     return (
       <div>
         <h1>{this.props.match.params.username}</h1>
+        <Link to="/profile/edit" className="uk-button uk-button-default button">
+          Edit Profile
+        </Link>
         <img src={this.props.profile.photo} height="400" width="400" />
         {this.props.profile.bio && <p>{this.props.profile.bio}</p>}
         {this.props.profile.followers && (
