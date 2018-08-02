@@ -21,13 +21,14 @@ class HomePage extends Component {
               Latest
             </a>
           </li>
-          {this.props.postsByFollowedAuthors && (
-            <li>
-              <a href="#" className="tab__label">
-                Posts From Your Favourite Authors
-              </a>
-            </li>
-          )}
+          {this.props.postsByFollowedAuthors &&
+            this.props.postsByFollowedAuthors.length > 0 && (
+              <li>
+                <a href="#" className="tab__label">
+                  Posts From Your Favourite Authors
+                </a>
+              </li>
+            )}
         </ul>
         <ul className="uk-switcher">
           <li>
@@ -35,13 +36,7 @@ class HomePage extends Component {
           </li>
           <li>
             {this.props.postsByFollowedAuthors && (
-              <ArticleList
-                posts={
-                  this.props.token
-                    ? this.props.postsByFollowedAuthors
-                    : this.props.mostPopularPosts
-                }
-              />
+              <ArticleList posts={this.props.postsByFollowedAuthors} />
             )}
           </li>
         </ul>

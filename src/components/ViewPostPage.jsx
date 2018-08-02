@@ -79,7 +79,9 @@ class ViewPostPage extends Component {
                   state: { username: this.props.post.author.username }
                 }}
               >
-                {this.props.post.author.username}{" "}
+                {this.props.post.author.username === this.props.username
+                  ? "you"
+                  : this.props.post.author.username}{" "}
               </Link>
               on {moment(this.props.post.createdAt).format("MMM Do YYYY")}
             </p>
@@ -106,7 +108,7 @@ class ViewPostPage extends Component {
                     disabled={this.state.followed}
                   >
                     {this.state.followed
-                      ? "Followed"
+                      ? `Following ${this.props.post.author.username}`
                       : `Follow ${this.props.post.author.username}`}
                   </button>
                   <button
