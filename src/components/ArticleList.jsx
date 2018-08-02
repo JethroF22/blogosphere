@@ -11,6 +11,7 @@ const ArticleList = props => (
         key={Math.floor(Math.random() * 99999)}
       >
         <ArticleListItem post={post} />
+        <hr className="uk-divider-icon" />
       </Link>
     ))}
   </div>
