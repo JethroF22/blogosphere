@@ -15,29 +15,47 @@ export class CreatePostPage extends Component {
 
   onTitleChange = e => {
     const title = e.target.value;
-    this.setState(() => ({
-      title
+    this.setState(prevState => ({
+      title,
+      errors: {
+        ...prevState.errors,
+        title: ""
+      }
     }));
   };
 
   onBodyChange = e => {
     const body = e.target.value;
-    this.setState(() => ({
-      body
+    this.setState(prevState => ({
+      body,
+      errors: {
+        ...prevState.errors,
+        body: ""
+      }
     }));
   };
 
   onURLChange = e => {
     const coverPhotoURL = e.target.value;
-    this.setState(() => ({
-      coverPhotoURL
+    this.setState(prevState => ({
+      coverPhotoURL,
+      errors: {
+        ...prevState.errors,
+        coverPhotoURL: ""
+      }
     }));
   };
 
   onSubmit = e => {
     e.preventDefault();
 
-    if (!(this.state.body === "" && this.state.title === "")) {
+    if (
+      !(
+        this.state.body === "" &&
+        this.state.title === "" &&
+        this.state.coverPhotoURL === ""
+      )
+    ) {
       const blogPost = _.pick(this.state, ["title", "body", "coverPhotoURL"]);
       this.props.createPost(blogPost, this.props.token).then(slug => {
         if (this.props.actionStatus === "Action successful") {
@@ -46,9 +64,11 @@ export class CreatePostPage extends Component {
       });
     } else {
       const errors = {};
-      ["title", "body"].forEach(field => {
+      ["title", "body", "coverPhotoURL"].forEach(field => {
         if (this.state[field] === "") {
-          errors[field] = `"${field}" cannot be blank`;
+          errors[field] = `Your post requires a ${
+            field === "coverPhotoURL" ? "cover photo" : field
+          }`;
         }
         this.setState(() => ({ errors }));
       });
@@ -57,37 +77,67 @@ export class CreatePostPage extends Component {
 
   render() {
     return (
-      <div>
-        <h1>Create a Blog Post</h1>
-        <form onSubmit={this.onSubmit}>
-          {this.props.creationError && <p>{this.props.creationError}</p>}
-          <label htmlFor="title">Title: </label>
+      <div className="form">
+        <h1 className="form__title">Create a Blog Post</h1>
+        <form onSubmit={this.onSubmit} className="uk-form-stacked">
+          {this.props.creationError && (
+            <p className="form__error">{this.props.creationError}</p>
+          )}
+          <label htmlFor="title" className="form__label">
+            Title{" "}
+          </label>
+          {this.state.errors.title && (
+            <p className="form__error">{this.state.errors.title}</p>
+          )}
           <input
             type="text"
             name="title"
             value={this.state.title}
             onChange={this.onTitleChange}
+            className={`uk-input form__input ${
+              this.state.errors.title ? "uk-form-danger" : "uk-form-blank"
+            }`}
+            placeholder="Make it catchy!"
           />
-          {this.state.errors.title && <p>{this.state.errors.title}</p>}
           <br />
-          <label htmlFor="body">Body: </label>
-          <Textarea
-            name="body"
-            onChange={this.onBodyChange}
-            value={this.state.body}
-          />
-          {this.state.errors.body && <p>{this.state.errors.body}</p>}
-          <br />
-          <label htmlFor="coverPhoto">Cover Photo: </label>
+          <label htmlFor="coverPhoto" className="form__label">
+            Cover Photo{" "}
+          </label>
+          {this.state.errors.coverPhotoURL && (
+            <p className="form__error">{this.state.errors.coverPhotoURL}</p>
+          )}
           <input
             type="text"
             name="coverPhoto"
             value={this.state.coverPhotoURL}
             onChange={this.onURLChange}
-            placeholder="Image URL (optional)"
+            placeholder="Image URL"
+            className={`uk-input form__input ${
+              this.state.errors.coverPhotoURL
+                ? "uk-form-danger"
+                : "uk-form-blank"
+            }`}
           />
           <br />
-          <button type="submit">Create Post</button>
+          <label htmlFor="body" className="form__label">
+            Body{" "}
+          </label>
+          {this.state.errors.body && (
+            <p className="form__error">{this.state.errors.body}</p>
+          )}
+          <Textarea
+            name="body"
+            onChange={this.onBodyChange}
+            value={this.state.body}
+            className={`uk-textarea form__textarea ${
+              this.state.errors.body ? "uk-form-danger" : "uk-form-blank"
+            }`}
+            placeholder="Tell us your story..."
+          />
+          <br />
+          <button type="submit" className="uk-button uk-button-default button">
+            Create Post
+          </button>
         </form>
       </div>
     );
