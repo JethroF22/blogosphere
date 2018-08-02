@@ -120,7 +120,7 @@ export const getProfile = username => {
             name: "getProfile"
           })
         );
-        dispatch(setDetails(res.data));
+        dispatch(setDetails(res.data.user));
       })
       .catch(err => {
         dispatch(
