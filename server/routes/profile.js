@@ -5,6 +5,10 @@ const { ObjectID } = require("mongodb");
 const User = require("../models/user");
 const BlogPost = require("../models/blogPost");
 const authenticate = require("../middleware/authenticate");
+const {
+  filterBlogPostDocument,
+  filterUserDocument
+} = require("../utils/filter");
 
 const router = express.Router();
 
@@ -16,7 +20,8 @@ router.post("/create", authenticate, (req, res) => {
   user
     .save()
     .then(user => {
-      res.send(_.pick(user, ["photo", "bio"]));
+      user = filterUserDocument(user);
+      res.send({ user });
     })
     .catch(err => {
       res.status(400).send();
@@ -31,19 +36,8 @@ router.get("/:username", (req, res) => {
       }
       BlogPost.findPostsByAuthors(user.followedAuthors).then(
         postsByFollowedAuthors => {
-          res.send({
-            user: {
-              ..._.pick(user, [
-                "username",
-                "bio",
-                "photo",
-                "followers",
-                "followedAuthors",
-                "likedPosts"
-              ]),
-              postsByFollowedAuthors
-            }
-          });
+          user = filterUserDocument(user, { postsByFollowedAuthors });
+          res.send({ user });
         }
       );
     })
@@ -59,8 +53,8 @@ router.patch("/update/", authenticate, (req, res) => {
     { new: true }
   )
     .then(user => {
-      user = _.pick(user, ["username", "bio", "photo", "email"]);
-      res.send(user);
+      user = filterUserDocument(user);
+      res.send({ user });
     })
     .catch(err => res.status(400).send("DB error"));
 });
@@ -106,19 +100,10 @@ router.patch("/follow/", authenticate, (req, res) => {
           user.followedAuthors
         );
 
+        user = filterUserDocument(user, { postsByFollowedAuthors });
+
         res.send({
-          user: {
-            ..._.pick(user, [
-              "username",
-              "bio",
-              "photo",
-              "email",
-              "followedAuthors",
-              "likedPosts",
-              "followers"
-            ]),
-            postsByFollowedAuthors
-          }
+          user
         });
       });
     })
@@ -159,19 +144,10 @@ router.delete("/unfollow", authenticate, (req, res) => {
           user.followedAuthors
         );
 
+        user = filterUserDocument(user, { postsByFollowedAuthors });
+
         res.send({
-          user: {
-            ..._.pick(user, [
-              "username",
-              "bio",
-              "photo",
-              "email",
-              "followedAuthors",
-              "likedPosts",
-              "followers"
-            ]),
-            postsByFollowedAuthors
-          }
+          user
         });
       });
     })
@@ -191,6 +167,7 @@ router.get("/posts/:author", (req, res) => {
           .send({ msg: "This user has not published any posts" });
       }
 
+      posts = posts.map(post => filterBlogPostDocument(post));
       res.send({ posts });
     })
     .catch(err => {

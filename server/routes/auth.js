@@ -5,6 +5,7 @@ const { ObjectID } = require("mongodb");
 const User = require("../models/user");
 const BlogPost = require("../models/blogPost");
 const authenticate = require("../middleware/authenticate");
+const { filterUserDocument } = require("../utils/filter");
 
 const router = express.Router();
 
@@ -17,20 +18,7 @@ router.post("/register", (req, res) => {
     .save()
     .then(() => {
       res.send({
-        user: {
-          ..._.pick(
-            user,
-            "email",
-            "username",
-            "photo",
-            "bio",
-            "followedAuthors",
-            "followers",
-            "_id",
-            "likedPosts",
-            "token"
-          )
-        }
+        user: filterUserDocument(user)
       });
     })
     .catch(err => {
@@ -49,22 +37,9 @@ router.post("/login", (req, res) => {
     .then(user => {
       BlogPost.findPostsByAuthors(user.followedAuthors).then(
         postsByFollowedAuthors => {
+          user = filterUserDocument(user, { postsByFollowedAuthors });
           res.send({
-            user: {
-              ..._.pick(
-                user,
-                "email",
-                "username",
-                "photo",
-                "bio",
-                "followedAuthors",
-                "followers",
-                "_id",
-                "likedPosts",
-                "token"
-              ),
-              postsByFollowedAuthors
-            }
+            user
           });
         }
       );
@@ -75,20 +50,12 @@ router.post("/login", (req, res) => {
 });
 
 router.get("/user_details", authenticate, (req, res) => {
-  const user = _.pick(
-    req.user,
-    "email",
-    "username",
-    "photo",
-    "bio",
-    "followedAuthors",
-    "followers",
-    "_id",
-    "likedPosts"
-  );
+  let user = req.user;
   BlogPost.findPostsByAuthors(user.followedAuthors).then(
-    postsByFollowedAuthors =>
-      res.send({ user: { ...user, postsByFollowedAuthors } })
+    postsByFollowedAuthors => {
+      user = filterUserDocument(user, { postsByFollowedAuthors });
+      res.send({ user });
+    }
   );
 });
 
