@@ -6,6 +6,7 @@ const { ObjectID } = require("mongodb");
 const BlogPost = require("../models/blogPost");
 const User = require("../models/user");
 const authenticate = require("../middleware/authenticate");
+const { filterBlogPostDocument } = require("../utils/filter");
 
 const router = express.Router();
 
@@ -23,18 +24,9 @@ router.post("/create", authenticate, (req, res) => {
 
   post
     .save()
-    .then(doc => {
-      res.send(
-        _.pick(doc, [
-          "author",
-          "title",
-          "body",
-          "createdAt",
-          "coverPhotoURL",
-          "slug",
-          "_id"
-        ])
-      );
+    .then(post => {
+      post = filterBlogPostDocument(post);
+      res.send({ post });
     })
     .catch(err => {
       let errorMsg;
@@ -55,17 +47,9 @@ router.get("/view/:slug", (req, res) => {
         return res.status(404).send();
       }
 
-      const blogPost = _.pick(post, [
-        "author",
-        "title",
-        "body",
-        "createdAt",
-        "coverPhotoURL",
-        "slug",
-        "_id"
-      ]);
+      post = filterBlogPostDocument(post);
 
-      res.send({ blogPost });
+      res.send({ post });
     })
     .catch(err => {
       res.status(400).send();
@@ -75,17 +59,9 @@ router.get("/view/:slug", (req, res) => {
 router.get("/view", (req, res) => {
   BlogPost.find({}).then(docs => {
     const posts = [];
-    docs.forEach(doc => {
-      const blogPost = _.pick(doc, [
-        "author",
-        "title",
-        "body",
-        "createdAt",
-        "coverPhotoURL",
-        "slug",
-        "_id"
-      ]);
-      posts.push(blogPost);
+    docs.forEach(post => {
+      post = filterBlogPostDocument(post);
+      posts.push(post);
     });
     res.send({ posts });
   });
@@ -101,6 +77,8 @@ router.patch("/edit/:slug", authenticate, (req, res) => {
       if (!post) {
         return res.status(404).send("Post not found");
       }
+
+      post = filterBlogPostDocument(post);
 
       return res.send({ post });
     })
@@ -152,6 +130,7 @@ router.patch("/like/", authenticate, (req, res) => {
         if (!post) {
           return res.status(404).send({ msg: "Post not found" });
         }
+        post = filterBlogPostDocument(post);
         User.likePost(req.user, postAuthor, post).then(user =>
           res.status(200).send()
         );

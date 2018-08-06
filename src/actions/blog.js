@@ -33,7 +33,7 @@ export const createPost = (blogPost, token) => {
       }
     })
       .then(response => {
-        const data = response.data;
+        const data = response.data.post;
         dispatch(
           setCurrentPost({
             ...data
@@ -78,7 +78,7 @@ export const getPost = slug => {
       method: "get"
     })
       .then(response => {
-        const data = response.data.blogPost;
+        const data = response.data.post;
         dispatch(
           setCurrentPost({
             ...data

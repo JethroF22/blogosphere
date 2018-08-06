@@ -131,12 +131,18 @@ UserSchema.statics.likePost = function(user, author, post) {
             timestamp: new Date()
           }
         }
+      },
+      {
+        projection: {
+          _v: 0
+        }
       }
     ).then(() => {
       User.findOneAndUpdate(
         { username: user.username },
         { $push: { likedPosts: post } }
       ).then(user => {
+        console.log(user);
         return resolve(user);
       });
     });
@@ -166,7 +172,10 @@ UserSchema.statics.findByCredentials = function({ email, password }) {
 UserSchema.statics.findByToken = function(token) {
   const User = this;
 
-  return User.findOne({ token }).then(user => {
+  return User.findOne(
+    { token },
+    "email password username token photo bio followedAuthors followers likedPosts notifications"
+  ).then(user => {
     if (!user) {
       return Promise.reject();
     } else {

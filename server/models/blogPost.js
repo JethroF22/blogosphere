@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
 
+const { filterBlogPostDocument } = require("../utils/filter");
+
 const BlogPostSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -63,6 +65,7 @@ BlogPostSchema.statics.findPostsByAuthors = function(authors) {
         $in: authors
       }
     }).then(posts => {
+      posts = posts.map(post => filterBlogPostDocument(post));
       return resolve(posts);
     });
   });
