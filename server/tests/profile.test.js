@@ -65,8 +65,8 @@ describe("profile", () => {
           .get(`/profile/${user.username}`)
           .expect(200)
           .expect(res => {
-            expect(res.body.photo).to.equal(user.photo);
-            expect(res.body.bio).to.equal(user.bio);
+            expect(res.body.user.photo).to.equal(user.photo);
+            expect(res.body.user.bio).to.equal(user.bio);
           })
           .end(done);
       });
@@ -95,8 +95,8 @@ describe("profile", () => {
         .send(updates)
         .expect(200)
         .expect(res => {
-          expect(res.body.photo).to.equal(updates.photo);
-          expect(res.body.bio).to.equal(updates.bio);
+          expect(res.body.user.photo).to.equal(updates.photo);
+          expect(res.body.user.bio).to.equal(updates.bio);
         })
         .end(done);
     });

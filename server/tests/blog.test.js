@@ -64,9 +64,9 @@ describe("/blog", () => {
           .get(`/blog/view/${post.slug}`)
           .expect(200)
           .expect(res => {
-            expect(res.body.blogPost.body).to.equal(post.body);
-            expect(res.body.blogPost.title).to.equal(post.title);
-            expect(res.body.blogPost.slug).to.equal(post.slug);
+            expect(res.body.post.body).to.equal(post.body);
+            expect(res.body.post.title).to.equal(post.title);
+            expect(res.body.post.slug).to.equal(post.slug);
           })
           .end(done);
       });
@@ -215,6 +215,46 @@ describe("/blog", () => {
       it("should return 401 for unauthenticated requests", done => {
         request(app)
           .patch(`/blog/like/`)
+          .expect(401)
+          .end(done);
+      });
+    });
+
+    describe("/comment", () => {
+      let commentBody, _id;
+
+      beforeEach(function(done) {
+        this.timeout(0);
+        commentBody = "comment goes here";
+        _id = blogPosts[0]._id;
+        populateBlogPosts(done);
+      });
+
+      it("should create a comment on the selected post", done => {
+        request(app)
+          .patch("/blog/comment")
+          .set("token", users[0].token)
+          .send({ _id, commentBody })
+          .expect(200)
+          .expect(res => {
+            expect(res.body.post.comments.length).to.equal(1);
+          })
+          .end(done);
+      });
+
+      it("should return an error for invalid IDs", done => {
+        request(app)
+          .patch("/blog/comment")
+          .set("token", users[0].token)
+          .send({ commentBody })
+          .expect(404)
+          .end(done);
+      });
+
+      it("should return an authentication error for requests without valid tokens", done => {
+        request(app)
+          .patch("/blog/comment")
+          .send({ _id, commentBody })
           .expect(401)
           .end(done);
       });
