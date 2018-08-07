@@ -46,16 +46,16 @@ class HomePage extends Component {
 }
 
 const mapStateToProps = state => ({
-  posts: state.blog.posts,
+  posts: state.blog.posts
+    ? state.blog.posts.sort((a, b) => a.createdAt < b.createdAt)
+    : null,
   username: state.auth.username,
   token: state.auth.token,
   postsByFollowedAuthors: state.profile.postsByFollowedAuthors
     ? state.profile.postsByFollowedAuthors.sort(
         (a, b) => a.createdAt < b.createdAt
       )
-    : null,
-  mostPopularPosts:
-    state.profile.posts && state.profile.posts.sort((a, b) => a.likes < b.likes)
+    : null
 });
 
 const mapDispatchToProps = dispatch => ({

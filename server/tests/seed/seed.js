@@ -56,7 +56,9 @@ const blogPosts = [
       _id: userOneID,
       username: users[0].username
     },
-    _id: blogPostOneID
+    _id: blogPostOneID,
+    coverPhotoURL:
+      "https://images.pexels.com/photos/982263/pexels-photo-982263.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"
   },
   {
     title: "Test 2",
@@ -66,7 +68,9 @@ const blogPosts = [
     author: {
       _id: userTwoID,
       username: users[1].username
-    }
+    },
+    coverPhotoURL:
+      "https://images.pexels.com/photos/398533/pexels-photo-398533.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"
   }
 ];
 

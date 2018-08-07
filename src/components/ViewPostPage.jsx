@@ -1,10 +1,12 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import Parser from "html-react-parser";
 import marked from "marked";
 
+import CommentForm from "./CommentForm";
+import CommentList from "./CommentList";
 import { getPost } from "../actions/blog";
 import { followUnfollowAuthor } from "../actions/profile";
 import { likeUnlikePost } from "../actions/blog";
@@ -20,6 +22,7 @@ class ViewPostPage extends Component {
       if (this.props.actionStatus === "Action failed") {
         this.props.history.push("/404");
       } else {
+        console.log(this.props.post.comments);
         if (this.props.followedAuthors) {
           this.props.followedAuthors.forEach(author => {
             if (author.username === this.props.post.author.username) {
@@ -101,29 +104,35 @@ class ViewPostPage extends Component {
             <hr className="uk-divider-icon" />
             {this.props.token ? (
               this.props.post.author.username !== this.props.username && (
-                <div className="post__button-container">
-                  <button
-                    className="uk-button uk-button-default button"
-                    onClick={this.state.followed ? null : this.followAuthor}
-                    disabled={this.state.followed}
-                  >
-                    {this.state.followed
-                      ? `Following ${this.props.post.author.username}`
-                      : `Follow ${this.props.post.author.username}`}
-                  </button>
-                  <button
-                    className="uk-button uk-button-default button"
-                    onClick={this.state.liked ? null : this.likePost}
-                    disabled={this.state.liked}
-                  >
-                    {this.state.liked ? "Liked" : "Like post"}
-                  </button>
-                </div>
+                <Fragment>
+                  <div className="post__button-container">
+                    <button
+                      className="uk-button uk-button-default button"
+                      onClick={this.state.followed ? null : this.followAuthor}
+                      disabled={this.state.followed}
+                    >
+                      {this.state.followed
+                        ? `Following ${this.props.post.author.username}`
+                        : `Follow ${this.props.post.author.username}`}
+                    </button>
+                    <button
+                      className="uk-button uk-button-default button"
+                      onClick={this.state.liked ? null : this.likePost}
+                      disabled={this.state.liked}
+                    >
+                      {this.state.liked ? "Liked" : "Like post"}
+                    </button>
+                  </div>
+                  <CommentForm />
+                  {this.props.post && (
+                    <CommentList comments={this.props.comments} />
+                  )}
+                </Fragment>
               )
             ) : (
               <p className="post__subtitle">
-                <Link to="">Sign in</Link> to follow the author or like this
-                post!
+                <Link to="">Sign in</Link> to follow the author, like this post
+                or add a comment!
               </p>
             )}
           </div>
@@ -141,7 +150,10 @@ const mapStateToProps = state => ({
   token: state.auth.token,
   username: state.auth.username,
   followedAuthors: state.profile.followedAuthors,
-  likedPosts: state.profile.likedPosts
+  likedPosts: state.profile.likedPosts,
+  comments: state.blog.currentPost
+    ? state.blog.currentPost.comments.sort((a, b) => a.timestamp < b.timestamp)
+    : null
 });
 
 const mapDispatchToProps = dispatch => ({

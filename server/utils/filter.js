@@ -25,7 +25,8 @@ const filterBlogPostDocument = blogPost => ({
     "author",
     "slug",
     "likes",
-    "_id"
+    "_id",
+    "comments"
   ])
 });
 

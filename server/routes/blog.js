@@ -179,4 +179,31 @@ router.patch("/unlike/", authenticate, (req, res) => {
   });
 });
 
+router.patch("/comment", authenticate, (req, res) => {
+  const { _id, commentBody } = _.pick(req.body, ["_id", "commentBody"]);
+  const username = req.user.username;
+
+  BlogPost.findOneAndUpdate(
+    { _id },
+    {
+      $push: {
+        comments: {
+          username,
+          body: commentBody,
+          timestamp: new Date()
+        }
+      }
+    },
+    { new: true }
+  )
+    .then(post => {
+      if (!post) {
+        return res.status(404).send({ msg: "Post does not exist" });
+      }
+      post = filterBlogPostDocument(post);
+      res.send({ post });
+    })
+    .catch(err => res.status(400).send());
+});
+
 module.exports = router;

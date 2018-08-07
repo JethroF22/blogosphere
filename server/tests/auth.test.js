@@ -21,9 +21,9 @@ describe("/auth", () => {
           .send(users[0])
           .expect(200)
           .expect(res => {
-            expect(res.body.token).to.be.a("string");
-            expect(res.body.username).to.equal(users[0].username);
-            expect(res.body.email).to.equal(users[0].email);
+            expect(res.body.user.token).to.be.a("string");
+            expect(res.body.user.username).to.equal(users[0].username);
+            expect(res.body.user.email).to.equal(users[0].email);
           })
           .end(err => {
             if (err) {
