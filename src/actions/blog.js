@@ -221,3 +221,35 @@ export const likeUnlikePost = (post, token, type) => {
       });
   };
 };
+
+export const createComment = (commentBody, postID, token) => {
+  return dispatch => {
+    const url = `${process.env.API_URL}blog/comment/`;
+    dispatch(
+      setActionStatus({
+        type: "IN_PROGRESS",
+        name: "createComment"
+      })
+    );
+    return axios({
+      url,
+      method: "patch",
+      headers: { token },
+      data: { commentBody, _id: postID }
+    })
+      .then(res => {
+        dispatch(
+          setActionStatus({
+            type: "SUCCESSFUL",
+            name: "createComment"
+          })
+        );
+        const post = res.data.post;
+        dispatch(setCurrentPost(post));
+      })
+      .catch(err => {
+        dispatch(setActionStatus({ type: "FAILED", name: "createComment" }));
+        console.log(err.response);
+      });
+  };
+};
