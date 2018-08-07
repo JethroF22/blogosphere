@@ -124,7 +124,9 @@ class ViewPostPage extends Component {
                     </button>
                   </div>
                   <CommentForm />
-                  <CommentList comments={this.props.post.comments} />
+                  {this.props.post && (
+                    <CommentList comments={this.props.comments} />
+                  )}
                 </Fragment>
               )
             ) : (
@@ -148,7 +150,10 @@ const mapStateToProps = state => ({
   token: state.auth.token,
   username: state.auth.username,
   followedAuthors: state.profile.followedAuthors,
-  likedPosts: state.profile.likedPosts
+  likedPosts: state.profile.likedPosts,
+  comments: state.blog.currentPost
+    ? state.blog.currentPost.comments.sort((a, b) => a.timestamp < b.timestamp)
+    : null
 });
 
 const mapDispatchToProps = dispatch => ({
