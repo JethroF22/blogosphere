@@ -157,7 +157,7 @@ export const followUnfollowAuthor = (author, token, type) => {
             name: "followUnfollowAuthor"
           })
         );
-        dispatch(setDetails(res.data));
+        dispatch(setDetails(res.data.user));
       })
       .catch(err => {
         dispatch(
