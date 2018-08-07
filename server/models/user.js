@@ -131,11 +131,6 @@ UserSchema.statics.likePost = function(user, author, post) {
             timestamp: new Date()
           }
         }
-      },
-      {
-        projection: {
-          _v: 0
-        }
       }
     ).then(() => {
       User.findOneAndUpdate(
