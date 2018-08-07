@@ -52,7 +52,23 @@ const BlogPostSchema = new mongoose.Schema({
   likes: {
     type: Number,
     default: 0
-  }
+  },
+  comments: [
+    {
+      username: {
+        type: String,
+        required: true
+      },
+      body: {
+        type: String,
+        required: true
+      },
+      timestamp: {
+        type: Number,
+        required: true
+      }
+    }
+  ]
 });
 
 BlogPostSchema.statics.findPostsByAuthors = function(authors) {
