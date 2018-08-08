@@ -12,13 +12,15 @@ const router = express.Router();
 
 router.post("/create", authenticate, (req, res) => {
   const body = req.body;
+  const author = {
+    _id: req.user._id,
+    username: req.user.username
+  };
+  if (req.user.photo) author.photo = req.user.photo;
   const post = new BlogPost({
     ...body,
     createdAt: new Date(),
-    author: {
-      _id: req.user._id,
-      username: req.user.username
-    },
+    author,
     slug: slugify(body.title)
   });
 
