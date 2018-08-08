@@ -82,10 +82,10 @@ class ViewProfile extends Component {
             )}
             {this.props.profile.followers && (
               <p className="profile__subtitle">
-                {this.props.followersCount} follower{this.props.followersCount >
-                0
-                  ? "s"
-                  : ""}
+                {this.props.followersCount} follower{this.props
+                  .followersCount === 1
+                  ? ""
+                  : "s"}
               </p>
             )}
           </div>
@@ -133,9 +133,9 @@ class ViewProfile extends Component {
             ) : (
               <p className="profile__message">
                 {this.state.isOwnProfile
-                  ? "You"
-                  : `${this.state.profileUsername}`}{" "}
-                has yet to like any posts
+                  ? "You have"
+                  : `${this.state.profileUsername} has`}{" "}
+                yet to like any posts
               </p>
             )}
           </li>
