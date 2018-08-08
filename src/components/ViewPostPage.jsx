@@ -7,6 +7,7 @@ import marked from "marked";
 
 import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
+import AuthorDetails from "./AuthorDetails";
 import { getPost } from "../actions/blog";
 import { followUnfollowAuthor } from "../actions/profile";
 import { likeUnlikePost } from "../actions/blog";
@@ -22,7 +23,6 @@ class ViewPostPage extends Component {
       if (this.props.actionStatus === "Action failed") {
         this.props.history.push("/404");
       } else {
-        console.log(this.props.post.comments);
         if (this.props.followedAuthors) {
           this.props.followedAuthors.forEach(author => {
             if (author.username === this.props.post.author.username) {
@@ -105,16 +105,11 @@ class ViewPostPage extends Component {
             {this.props.token ? (
               this.props.post.author.username !== this.props.username && (
                 <Fragment>
-                  <div className="post__button-container">
-                    <button
-                      className="uk-button uk-button-default button"
-                      onClick={this.state.followed ? null : this.followAuthor}
-                      disabled={this.state.followed}
-                    >
-                      {this.state.followed
-                        ? `Following ${this.props.post.author.username}`
-                        : `Follow ${this.props.post.author.username}`}
-                    </button>
+                  <div className="post__likes">
+                    <p>
+                      {this.props.post.likes}{" "}
+                      {`like${this.props.post.likes === 1 ? "" : "s"}`}
+                    </p>
                     <button
                       className="uk-button uk-button-default button"
                       onClick={this.state.liked ? null : this.likePost}
@@ -123,6 +118,13 @@ class ViewPostPage extends Component {
                       {this.state.liked ? "Liked" : "Like post"}
                     </button>
                   </div>
+                  <AuthorDetails
+                    photo={this.props.author.photo}
+                    username={this.props.author.username}
+                    followed={this.state.followed}
+                    followAuthor={this.followAuthor}
+                  />
+                  <hr className="uk-divider-icon" />
                   <CommentForm />
                   {this.props.post && (
                     <CommentList comments={this.props.comments} />
@@ -153,7 +155,8 @@ const mapStateToProps = state => ({
   likedPosts: state.profile.likedPosts,
   comments: state.blog.currentPost
     ? state.blog.currentPost.comments.sort((a, b) => a.timestamp < b.timestamp)
-    : null
+    : null,
+  author: state.blog.currentPost ? state.blog.currentPost.author : null
 });
 
 const mapDispatchToProps = dispatch => ({
