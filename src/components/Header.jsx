@@ -37,7 +37,7 @@ class PageHeader extends Component {
                   className="uk-button uk-button-default button button--dropdown"
                   type="button"
                 >
-                  <div className="">
+                  <div className="header__photo">
                     {this.props.userPhoto ? (
                       <img src={this.props.userPhoto} />
                     ) : (

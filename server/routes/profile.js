@@ -96,15 +96,15 @@ router.patch("/follow/", authenticate, (req, res) => {
             .send({ msg: "This author is already being followed" });
         }
 
-        const postsByFollowedAuthors = BlogPost.findPostsByAuthors(
-          user.followedAuthors
+        BlogPost.findPostsByAuthors(user.followedAuthors).then(
+          postsByFollowedAuthors => {
+            user = filterUserDocument(user, { postsByFollowedAuthors });
+
+            res.send({
+              user
+            });
+          }
         );
-
-        user = filterUserDocument(user, { postsByFollowedAuthors });
-
-        res.send({
-          user
-        });
       });
     })
     .catch(() => {

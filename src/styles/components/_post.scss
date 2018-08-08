@@ -28,7 +28,13 @@
   width: 100%;
 }
 
-.post__button-container {
+.post__likes {
   display: flex;
-  justify-content: space-around;
+  align-items: center;
+  justify-content: left;
+  font-size: $font-extra-large;
+  margin-left: 15%;
+  & * {
+    margin-left: 5%;
+  }
 }
