@@ -43,6 +43,14 @@ const BlogPostSchema = new mongoose.Schema({
       required: true,
       type: String,
       minLength: 6
+    },
+    photo: {
+      type: String,
+      trim: true,
+      validator: {
+        validator: validator.isURL,
+        message: "{VALUE} is not a valid URL"
+      }
     }
   },
   slug: {
