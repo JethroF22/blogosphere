@@ -207,8 +207,10 @@ export const likeUnlikePost = (post, token, type) => {
             name: "likeUnlikePost"
           })
         );
+        post.likes += 1;
         const likedPosts = getState().profile.likedPosts.concat(post);
         dispatch(updatedLikedPosts(likedPosts));
+        dispatch(setCurrentPost(post));
       })
       .catch(err => {
         dispatch(
