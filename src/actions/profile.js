@@ -8,7 +8,8 @@ export const setDetails = ({
   followedAuthors,
   followers,
   likedPosts,
-  postsByFollowedAuthors
+  postsByFollowedAuthors,
+  notifications
 }) => ({
   type: "SET_PROFILE_DETAILS",
   bio,
@@ -16,7 +17,8 @@ export const setDetails = ({
   followedAuthors,
   followers,
   likedPosts,
-  postsByFollowedAuthors
+  postsByFollowedAuthors,
+  notifications
 });
 
 export const clearProfileDetails = () => ({ type: "CLEAR_PROFILE_DETAILS" });
