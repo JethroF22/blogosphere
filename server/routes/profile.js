@@ -175,4 +175,28 @@ router.get("/posts/:author", (req, res) => {
     });
 });
 
+router.delete("/clear_notification", authenticate, (req, res) => {
+  const notification = req.body;
+
+  User.findOneAndUpdate(
+    {
+      username: req.user.username,
+      notifications: {
+        $in: notification
+      }
+    },
+    {
+      $pull: {
+        notifications: notification
+      }
+    },
+    { new: true }
+  ).then(user => {
+    if (!user) {
+      return res.status(404).send();
+    }
+    res.send({ user: filterUserDocument(user) });
+  });
+});
+
 module.exports = router;
