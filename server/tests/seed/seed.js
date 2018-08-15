@@ -18,7 +18,13 @@ const users = [
     token: jwt.sign({ _id: userOneID }, process.env.JWT_SECRET).toString(),
     photo:
       "https://images.pexels.com/photos/982612/pexels-photo-982612.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
-    bio: "User 1 bio"
+    bio: "User 1 bio",
+    notifications: [
+      {
+        message: 'User 2 has liked your post "Test 1"',
+        timestamp: Date.now()
+      }
+    ]
   },
   {
     _id: userTwoID,
