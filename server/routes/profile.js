@@ -175,4 +175,34 @@ router.get("/posts/:author", (req, res) => {
     });
 });
 
+router.delete("/clear_notification", authenticate, (req, res) => {
+  const notification = req.body.notification;
+
+  User.findOneAndUpdate(
+    {
+      username: req.user.username,
+      notifications: {
+        $in: notification
+      }
+    },
+    {
+      $pull: {
+        notifications: notification
+      }
+    },
+    { new: true }
+  ).then(user => {
+    if (!user) {
+      return res.status(404).send("Notification not found");
+    }
+    BlogPost.findPostsByAuthors(user.followedAuthors).then(
+      postsByFollowedAuthors => {
+        res.send({
+          user: filterUserDocument(user, { postsByFollowedAuthors })
+        });
+      }
+    );
+  });
+});
+
 module.exports = router;

@@ -10,7 +10,8 @@ const filterUserDocument = (user, additionalFields) => ({
     "followers",
     "_id",
     "likedPosts",
-    "token"
+    "token",
+    "notifications"
   ]),
   ...additionalFields
 });

@@ -8,7 +8,8 @@ export default (state = {}, action) => {
         followedAuthors: action.followedAuthors,
         followers: action.followers,
         likedPosts: action.likedPosts,
-        postsByFollowedAuthors: action.postsByFollowedAuthors
+        postsByFollowedAuthors: action.postsByFollowedAuthors,
+        notifications: action.notifications
       };
     case "CLEAR_PROFILE_DETAILS":
       return {};

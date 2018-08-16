@@ -92,7 +92,8 @@ const UserSchema = new mongoose.Schema({
       timestamp: {
         type: Number,
         required: true
-      }
+      },
+      _id: false
     }
   ]
 });
@@ -137,7 +138,6 @@ UserSchema.statics.likePost = function(user, author, post) {
         { username: user.username },
         { $push: { likedPosts: post } }
       ).then(user => {
-        console.log(user);
         return resolve(user);
       });
     });

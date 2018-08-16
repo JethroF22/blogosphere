@@ -23,36 +23,38 @@ describe("profile", () => {
   });
 
   describe("POST", () => {
-    it("updates the user's details", done => {
-      request(app)
-        .post("/profile/create")
-        .set("token", users[0].token)
-        .send({
-          photo,
-          bio
-        })
-        .expect(200)
-        .end((err, res) => {
-          if (err) {
-            return done(err);
-          }
+    describe("/create", () => {
+      it("updates the user's details", done => {
+        request(app)
+          .post("/profile/create")
+          .set("token", users[0].token)
+          .send({
+            photo,
+            bio
+          })
+          .expect(200)
+          .end((err, res) => {
+            if (err) {
+              return done(err);
+            }
 
-          User.findOne({ photo, bio })
-            .then(user => {
-              expect(user.photo).to.equal(photo);
-              expect(user.bio).to.equal(bio);
-              done();
-            })
-            .catch(err => done(err));
-        });
-    });
+            User.findOne({ photo, bio })
+              .then(user => {
+                expect(user.photo).to.equal(photo);
+                expect(user.bio).to.equal(bio);
+                done();
+              })
+              .catch(err => done(err));
+          });
+      });
 
-    it("returns a 401 for requests without tokens", done => {
-      request(app)
-        .post("/profile/create")
-        .send({ photo, bio })
-        .expect(401)
-        .end(done);
+      it("returns a 401 for requests without tokens", done => {
+        request(app)
+          .post("/profile/create")
+          .send({ photo, bio })
+          .expect(401)
+          .end(done);
+      });
     });
   });
 
@@ -81,42 +83,42 @@ describe("profile", () => {
   });
 
   describe("PATCH ", () => {
-    let updates = {
-      photo:
-        "https://images.pexels.com/photos/566040/pexels-photo-566040.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
-      bio: "Updated bio"
-    };
-    let user = users[0];
+    describe("/update", () => {
+      let updates = {
+        photo:
+          "https://images.pexels.com/photos/566040/pexels-photo-566040.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
+        bio: "Updated bio"
+      };
+      let user = users[0];
 
-    it("should update a user's profile", done => {
-      request(app)
-        .patch(`/profile/update`)
-        .set("token", user.token)
-        .send(updates)
-        .expect(200)
-        .expect(res => {
-          expect(res.body.user.photo).to.equal(updates.photo);
-          expect(res.body.user.bio).to.equal(updates.bio);
-        })
-        .end(done);
+      it("should update a user's profile", done => {
+        request(app)
+          .patch(`/profile/update`)
+          .set("token", user.token)
+          .send(updates)
+          .expect(200)
+          .expect(res => {
+            expect(res.body.user.photo).to.equal(updates.photo);
+            expect(res.body.user.bio).to.equal(updates.bio);
+          })
+          .end(done);
+      });
+
+      it("should return 401 if token is invalid or non-existent", done => {
+        request(app)
+          .patch(`/profile/update`)
+          .send(updates)
+          .expect(401)
+          .end(done);
+      });
     });
 
-    it("should return 401 if token is invalid or non-existent", done => {
-      request(app)
-        .patch(`/profile/update`)
-        .send(updates)
-        .expect(401)
-        .end(done);
-    });
-  });
+    describe("/follow", () => {
+      beforeEach(function(done) {
+        this.timeout(0);
+        populateUsers(done);
+      });
 
-  describe("/follow", () => {
-    beforeEach(function(done) {
-      this.timeout(0);
-      populateUsers(done);
-    });
-
-    describe("PATCH", () => {
       it("should add the author to the list of followed authors", done => {
         const user = users[0];
 
@@ -160,6 +162,54 @@ describe("profile", () => {
           .patch("/profile/follow")
           .set("token", users[0].token)
           .send(user)
+          .expect(404)
+          .end(done);
+      });
+    });
+  });
+
+  describe("DELETE", () => {
+    let user;
+
+    describe("/clear_notification", () => {
+      beforeEach(function(done) {
+        this.timeout(0);
+        populateUsers(done);
+        user = users[0];
+      });
+
+      it("clears a notification", done => {
+        const notification = user.notifications[0];
+
+        request(app)
+          .delete("/profile/clear_notification")
+          .set("token", user.token)
+          .send(notification)
+          .expect(200)
+          .end((err, res) => {
+            if (err) {
+              return done(err);
+            }
+
+            User.findOne({ username: user.username })
+              .then(user => {
+                expect(user.notifications.length).to.equal(0);
+                done();
+              })
+              .catch(err => done(err));
+          });
+      });
+
+      it("returns an error if the notification doesn't exist", done => {
+        const notification = {
+          message: "Random message",
+          timestamp: 12342983749283
+        };
+
+        request(app)
+          .delete("/profile/clear_notification")
+          .set("token", user.token)
+          .send(notification)
           .expect(404)
           .end(done);
       });
