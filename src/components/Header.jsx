@@ -2,9 +2,13 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUserCircle,
+  faBell,
+  faTimes
+} from "@fortawesome/free-solid-svg-icons";
 
-import { clearProfileDetails } from "../actions/profile";
+import { clearProfileDetails, clearNotification } from "../actions/profile";
 import { clearUserDetails } from "../actions/auth";
 
 class PageHeader extends Component {
@@ -12,6 +16,10 @@ class PageHeader extends Component {
     localStorage.removeItem("token");
     this.props.clearUserDetails();
     this.props.clearProfileDetails();
+  };
+
+  clearNotification = (notification, e) => {
+    this.props.clearNotification(notification, this.props.token);
   };
 
   render() {
@@ -32,6 +40,35 @@ class PageHeader extends Component {
             </Fragment>
           ) : (
             <Fragment>
+              {this.props.notifications.length > 0 && (
+                <Fragment>
+                  <button
+                    className="uk-button uk-button-default button button--dropdown"
+                    type="button"
+                  >
+                    <FontAwesomeIcon icon={faBell} size="3x" />
+                  </button>
+                  <div uk-dropdown="mode: hover; delay-hide: 300; pos: bottom-right">
+                    <ul className="uk-nav uk-dropdown-nav">
+                      {this.props.notifications.map(notification => (
+                        <li
+                          className="header__notification"
+                          key={Math.floor(Math.random() * 99999)}
+                        >
+                          <p>{notification.message}</p>
+                          <button
+                            className="uk-button uk-button-default button button--notification"
+                            type="button"
+                            onClick={() => this.clearNotification(notification)}
+                          >
+                            <FontAwesomeIcon icon={faTimes} />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </Fragment>
+              )}
               <div className="uk-inline header__photo">
                 <button
                   className="uk-button uk-button-default button button--dropdown"
@@ -83,12 +120,15 @@ class PageHeader extends Component {
 const mapStateToProps = state => ({
   token: state.auth.token,
   username: state.auth.username,
-  userPhoto: state.profile.photo
+  userPhoto: state.profile.photo,
+  notifications: state.profile.notifications ? state.profile.notifications : []
 });
 
 const mapDispatchToProps = dispatch => ({
   clearUserDetails: () => dispatch(clearUserDetails()),
-  clearProfileDetails: () => dispatch(clearProfileDetails())
+  clearProfileDetails: () => dispatch(clearProfileDetails()),
+  clearNotification: (notification, token) =>
+    dispatch(clearNotification(notification, token))
 });
 
 export default connect(

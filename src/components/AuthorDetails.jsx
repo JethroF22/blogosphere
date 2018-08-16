@@ -18,7 +18,7 @@ const AuthorDetails = props => (
         onClick={props.followed ? null : props.followAuthor}
         disabled={props.followed}
       >
-        {props.followed ? `Following ${props.username}` : `Followed`}
+        {props.followed ? `Following ${props.username}` : `Follow`}
       </button>
     </div>
   </div>
