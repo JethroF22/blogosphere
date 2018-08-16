@@ -176,7 +176,7 @@ router.get("/posts/:author", (req, res) => {
 });
 
 router.delete("/clear_notification", authenticate, (req, res) => {
-  const notification = req.body;
+  const notification = req.body.notification;
 
   User.findOneAndUpdate(
     {
@@ -193,9 +193,15 @@ router.delete("/clear_notification", authenticate, (req, res) => {
     { new: true }
   ).then(user => {
     if (!user) {
-      return res.status(404).send();
+      return res.status(404).send("Notification not found");
     }
-    res.send({ user: filterUserDocument(user) });
+    BlogPost.findPostsByAuthors(user.followedAuthors).then(
+      postsByFollowedAuthors => {
+        res.send({
+          user: filterUserDocument(user, { postsByFollowedAuthors })
+        });
+      }
+    );
   });
 });
 
