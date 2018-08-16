@@ -17,20 +17,15 @@ class ViewProfile extends Component {
 
   componentDidMount() {
     const username = this.props.match.params.username;
-    if (username !== this.props.username) {
-      this.setState(() => ({
-        isOwnProfile: false,
-        profileUsername: username
-      }));
-      this.props.getProfile(username).then(() => {
-        if (this.props.actionStatus === "Action successful") {
-          this.props.getPosts(username);
-        } else {
-          console.log("Error");
-        }
-      });
-    }
-    console.log();
+    this.props.getPosts(username).then(() => {
+      if (username !== this.props.username) {
+        this.setState(() => ({
+          isOwnProfile: false,
+          profileUsername: username
+        }));
+        this.props.getProfile(username);
+      }
+    });
   }
 
   componentWillUnmount() {
@@ -82,10 +77,8 @@ class ViewProfile extends Component {
             )}
             {this.props.profile.followers && (
               <p className="profile__subtitle">
-                {this.props.followersCount} follower{this.props
-                  .followersCount === 1
-                  ? ""
-                  : "s"}
+                {this.props.followersCount} follower
+                {this.props.followersCount === 1 ? "" : "s"}
               </p>
             )}
           </div>
