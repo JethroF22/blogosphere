@@ -204,3 +204,47 @@ export const getPostsByAuthor = author => {
       });
   };
 };
+
+export const clearNotification = (notification, token) => {
+  return dispatch => {
+    const url = `${process.env.API_URL}profile/clear_notification`;
+    dispatch(
+      setActionStatus({
+        type: "IN_PROGRESS",
+        name: "clearNotification"
+      })
+    );
+    return axios({
+      url,
+      data: { notification },
+      method: "delete",
+      headers: {
+        token
+      }
+    })
+      .then(response => {
+        const user = response.data.user;
+        console.log(user);
+        dispatch(setDetails(user));
+        dispatch(
+          setActionStatus({
+            type: "SUCCESSFUL",
+            name: "clearNotification"
+          })
+        );
+      })
+      .catch(error => {
+        dispatch(
+          setActionStatus({
+            type: "FAILED",
+            name: "clearNotification"
+          })
+        );
+        if (error.response.status === 400) {
+          dispatch(setError(error.response.data.error));
+        } else {
+          console.log(error.response);
+        }
+      });
+  };
+};
