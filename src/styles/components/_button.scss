@@ -1,0 +1,18 @@
+.button {
+  font-size: $font-medium;
+  text-transform: none;
+}
+
+.button--dropdown {
+  background: none;
+  border: none;
+}
+
+.button--profile {
+  margin-left: $medium-size;
+}
+
+.button--notification {
+  height: 40%;
+  margin-bottom: $small-size;
+}

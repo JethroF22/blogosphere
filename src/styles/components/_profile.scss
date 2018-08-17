@@ -1,0 +1,48 @@
+.profile {
+  width: 60%;
+  margin: $large-size auto;
+}
+
+.profile__photo {
+  border-radius: 50%;
+  width: 25%;
+}
+
+.profile__title {
+  margin: 0;
+  font-size: $font-extra-large;
+  margin-left: $medium-size;
+}
+
+.profile__subtitle {
+  font-size: $font-large;
+  margin-left: $medium-size;
+}
+
+.profile__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile__bio {
+  display: flex;
+  font-size: $font-large;
+  font-family: $serif;
+}
+
+.profile__bio,
+.profile__header {
+  width: 80%;
+  margin: $medium-size auto;
+}
+
+.profile__message {
+  font-size: $font-large;
+  font-family: $serif;
+  text-align: center;
+
+  & > a {
+    color: #2395f2;
+  }
+}

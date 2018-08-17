@@ -1,0 +1,22 @@
+.details {
+  display: flex;
+  justify-content: left;
+  font-size: $font-large;
+  margin: $large-size auto;
+  width: 60%;
+}
+
+.details__left {
+  height: 100px;
+  width: 100px;
+
+  & img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+  }
+}
+
+.details__right {
+  margin-left: $medium-size;
+}

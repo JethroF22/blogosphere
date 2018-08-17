@@ -1,0 +1,25 @@
+.article-list {
+  text-align: center;
+  margin: $medium-size auto;
+  width: 60%;
+
+  & a:hover {
+    text-decoration: none;
+  }
+}
+
+.article-list__title {
+  font-size: $font-medium;
+  font-family: $sans-serif;
+}
+
+.article-list__subtitle {
+  font-size: $font-small;
+  font-family: $sans-serif;
+  color: $grey;
+}
+
+.article-list__image {
+  height: 60vh;
+  margin-bottom: $medium-size;
+}

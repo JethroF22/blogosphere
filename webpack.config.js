@@ -1,4 +1,5 @@
 const path = require("path");
+const dotenv = require("dotenv-webpack");
 
 module.exports = {
   entry: ["babel-polyfill", "./src/app.jsx"],
@@ -28,5 +29,6 @@ module.exports = {
   resolve: {
     modules: ["node_modules"],
     extensions: [".js", ".json", ".jsx"]
-  }
+  },
+  plugins: [new dotenv()]
 };

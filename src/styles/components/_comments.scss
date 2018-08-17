@@ -1,0 +1,26 @@
+.comments {
+  font-size: $font-medium;
+  margin: $extra-large-size auto;
+  width: 60%;
+}
+
+.comment {
+  border: 1px solid darken($color: #fafafa, $amount: 5%);
+  box-shadow: $box-shadow;
+  margin-bottom: $medium-size;
+  padding: $medium-size;
+}
+
+.comment__username {
+  font-weight: bold;
+}
+
+.comment__date {
+  color: lighten($color: #000000, $amount: 30%);
+  font-weight: 400;
+}
+
+.comment__comment-body {
+  font-family: $serif;
+  font-size: $font-large;
+}

@@ -1,0 +1,40 @@
+.post {
+  margin: $large-size auto $extra-large-size auto;
+  width: 80%;
+}
+
+.post__title {
+  font-family: $sans-serif;
+  font-size: $font-title;
+  text-align: center;
+}
+
+.post__subtitle {
+  font-family: $sans-serif;
+  font-size: $font-medium;
+  color: $grey;
+  text-align: center;
+}
+
+.post__body {
+  margin: $large-size auto;
+  font-size: $font-extra-large;
+  line-height: 1.2;
+  text-align: justify;
+  width: 80%;
+}
+
+.post__image {
+  width: 100%;
+}
+
+.post__likes {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  font-size: $font-extra-large;
+  margin-left: 15%;
+  & * {
+    margin-left: 5%;
+  }
+}
