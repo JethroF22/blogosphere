@@ -72,14 +72,14 @@ class ViewProfile extends Component {
                 </button>
               )}
             </h1>
-            {this.props.profile.bio && (
-              <p className="profile__bio">{this.props.profile.bio}</p>
-            )}
             {this.props.profile.followers && (
               <p className="profile__subtitle">
                 {this.props.followersCount} follower
                 {this.props.followersCount === 1 ? "" : "s"}
               </p>
+            )}
+            {this.props.profile.bio && (
+              <p className="profile__bio">{this.props.profile.bio}</p>
             )}
           </div>
 
