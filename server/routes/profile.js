@@ -15,11 +15,15 @@ const router = express.Router();
 router.post("/create", authenticate, (req, res) => {
   const data = _.pick(req.body, ["photo", "bio"]);
   const user = req.user;
-  user.photo = data.photo;
-  user.bio = data.bio;
-  user
-    .save()
+
+  User.findOneAndUpdate(
+    { username: user.username, email: user.email },
+    { $set: data },
+    { new: true }
+  )
     .then(user => {
+      if (!user) return res.status(404).send({ msg: "User not found" });
+      console.log("user after", user);
       user = filterUserDocument(user);
       res.send({ user });
     })
@@ -46,6 +50,7 @@ router.get("/:username", (req, res) => {
 
 router.patch("/update/", authenticate, (req, res) => {
   const data = _.pick(req.body, ["photo", "bio"]);
+  console.log(data);
 
   User.findOneAndUpdate(
     { username: req.user.username, email: req.user.email },
