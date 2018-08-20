@@ -5,7 +5,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUserCircle,
   faBell,
-  faTimes
+  faTimes,
+  faSignOutAlt,
+  faPencilAlt,
+  faUser
 } from "@fortawesome/free-solid-svg-icons";
 
 import { clearProfileDetails, clearNotification } from "../actions/profile";
@@ -83,17 +86,26 @@ class PageHeader extends Component {
                   </div>
                 </button>
                 <div uk-dropdown="mode: hover; delay-hide: 300">
-                  <ul className="uk-nav uk-dropdown-nav">
+                  <ul className="uk-nav uk-dropdown-nav ">
                     <li>
                       <Link
                         to={`/profile/view/${this.props.username}`}
-                        className="header__text"
+                        className="header__text header__dropdown-link"
                       >
+                        <span>
+                          <FontAwesomeIcon icon={faUser} />
+                        </span>
                         Profile
                       </Link>
                     </li>
                     <li>
-                      <Link to="/blog/create" className="header__text">
+                      <Link
+                        to="/blog/create"
+                        className="header__text header__dropdown-link"
+                      >
+                        <span>
+                          <FontAwesomeIcon icon={faPencilAlt} />
+                        </span>
                         New Post
                       </Link>
                     </li>
@@ -101,8 +113,11 @@ class PageHeader extends Component {
                       <Link
                         to=""
                         onClick={this.clearUserDetails}
-                        className="header__text"
+                        className="header__text header__dropdown-link"
                       >
+                        <span>
+                          <FontAwesomeIcon icon={faSignOutAlt} />
+                        </span>
                         Log Out
                       </Link>
                     </li>

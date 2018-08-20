@@ -60,3 +60,10 @@
   width: 15vw;
   white-space: normal;
 }
+
+.header__dropdown-link {
+  font-size: $font-large;
+  & span {
+    margin-right: $medium-size;
+  }
+}
