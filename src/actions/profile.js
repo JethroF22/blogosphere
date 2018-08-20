@@ -36,21 +36,19 @@ export const createProfile = (details, token) => {
     );
     return axios({
       url,
-      data: {
-        details,
-        token
-      },
+      data: details,
       method: "post",
       headers: { token }
     })
       .then(res => {
+        const user = res.data.user;
         dispatch(
           setActionStatus({
             type: "SUCCESSFUL",
             name: "createProfile"
           })
         );
-        dispatch(setDetails(res.data));
+        dispatch(setDetails(user));
       })
       .catch(err => {
         dispatch(

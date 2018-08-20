@@ -72,14 +72,14 @@ class ViewProfile extends Component {
                 </button>
               )}
             </h1>
-            {this.props.profile.bio && (
-              <p className="profile__bio">{this.props.profile.bio}</p>
-            )}
             {this.props.profile.followers && (
               <p className="profile__subtitle">
                 {this.props.followersCount} follower
                 {this.props.followersCount === 1 ? "" : "s"}
               </p>
+            )}
+            {this.props.profile.bio && (
+              <p className="profile__bio">{this.props.profile.bio}</p>
             )}
           </div>
 
@@ -145,7 +145,9 @@ const mapStateToProps = state => ({
   followersCount: state.profile.followers ? state.profile.followers.length : 0,
   likedPosts: state.profile.likedPosts || [],
   publishedPosts: state.profile.publishedPosts || [],
-  followedAuthors: state.profile.followedAuthors.map(author => author.username)
+  followedAuthors: state.profile.followedAuthors
+    ? state.profile.followedAuthors.map(author => author.username)
+    : []
 });
 
 const mapDispatchToProps = dispatch => ({
