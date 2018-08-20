@@ -145,7 +145,9 @@ const mapStateToProps = state => ({
   followersCount: state.profile.followers ? state.profile.followers.length : 0,
   likedPosts: state.profile.likedPosts || [],
   publishedPosts: state.profile.publishedPosts || [],
-  followedAuthors: state.profile.followedAuthors.map(author => author.username)
+  followedAuthors: state.profile.followedAuthors
+    ? state.profile.followedAuthors.map(author => author.username)
+    : []
 });
 
 const mapDispatchToProps = dispatch => ({
