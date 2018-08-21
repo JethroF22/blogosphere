@@ -79,7 +79,7 @@ export const editProfile = (updates, token) => {
       }
     })
       .then(response => {
-        const user = response.data;
+        const user = response.data.user;
         dispatch(setDetails(user));
         dispatch(
           setActionStatus({
