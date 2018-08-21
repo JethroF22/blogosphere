@@ -94,6 +94,17 @@ class ViewPostPage extends Component {
                 {moment(this.props.post.updatedAt).format("MMM Do YYYY")}
               </p>
             )}
+            {this.props.post.author.username === this.props.username && (
+              <div className="post__edit">
+                <Link
+                  to={`/blog/edit/${this.props.post.slug}`}
+                  className="uk-button uk-button-default button "
+                >
+                  Edit Post
+                </Link>
+              </div>
+            )}
+
             <img
               uk-img={`dataSrc: ${this.props.post.coverPhotoURL}`}
               className="post__image"

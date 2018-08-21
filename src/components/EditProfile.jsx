@@ -1,5 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import Textarea from "react-textarea-autosize";
 
 import { editProfile, getProfile } from "../actions/profile";
@@ -23,6 +25,11 @@ class EditProfile extends Component {
           console.log("Error");
         }
       });
+    } else {
+      this.setState(() => ({
+        photo: this.props.photo,
+        bio: this.props.bio
+      }));
     }
   }
 
@@ -113,8 +120,18 @@ class EditProfile extends Component {
           {this.state.errors.bio && (
             <p className="form__error">{this.state.errors.bio}</p>
           )}
-          <button type="submit" className="uk-button uk-button-default button">
-            Edit Profile
+          <button
+            type="submit"
+            className="uk-button uk-button-default button button--form"
+            disabled={this.props.actionStatus === "Action in progress"}
+          >
+            {this.props.actionStatus === "Action in progress" ? (
+              <Fragment>
+                <span>Updating </span> <FontAwesomeIcon icon={faSpinner} spin />
+              </Fragment>
+            ) : (
+              "Update Profile"
+            )}
           </button>
         </form>
       </div>

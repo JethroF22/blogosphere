@@ -1,5 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 import validator from "validator";
 
@@ -103,8 +105,19 @@ export class LoginPage extends Component {
             }`}
           />
           <br />
-          <button type="submit" className="uk-button uk-button-default button">
-            Submit
+          <button
+            type="submit"
+            className="uk-button uk-button-default button button--form"
+            disabled={this.props.actionStatus === "Action in progress"}
+          >
+            {this.props.actionStatus === "Action in progress" ? (
+              <Fragment>
+                <span>Logging in </span>{" "}
+                <FontAwesomeIcon icon={faSpinner} spin />
+              </Fragment>
+            ) : (
+              "Login"
+            )}
           </button>
         </form>
       </div>
