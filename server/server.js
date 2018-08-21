@@ -25,6 +25,10 @@ app.use("/auth", auth);
 app.use("/blog", blog);
 app.use("/profile", profile);
 
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+});
+
 app.listen(process.env.PORT, () => {
   console.log(`Server is live on port ${process.env.PORT}`);
 });
