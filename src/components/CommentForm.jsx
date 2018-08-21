@@ -1,5 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import { createComment } from "../actions/blog";
 
@@ -50,9 +52,19 @@ class CommentForm extends Component {
           <button
             type="submit"
             className="uk-button uk-button-default button"
-            disabled={this.state.commentBody ? false : true}
+            disabled={
+              !this.state.commentBody ||
+              this.props.actionStatus === "Action in progress"
+            }
           >
-            Submit comment
+            {this.props.actionStatus === "Action in progress" ? (
+              <Fragment>
+                <span>Submitting </span>{" "}
+                <FontAwesomeIcon icon={faSpinner} spin />
+              </Fragment>
+            ) : (
+              "Submit comment"
+            )}
           </button>
         </form>
       </div>
