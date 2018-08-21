@@ -1,5 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import Textarea from "react-textarea-autosize";
 import _ from "lodash";
 
@@ -135,8 +137,18 @@ export class CreatePostPage extends Component {
             placeholder="Tell us your story..."
           />
           <br />
-          <button type="submit" className="uk-button uk-button-default button">
-            Create Post
+          <button
+            type="submit"
+            className="uk-button uk-button-default button"
+            disabled={this.props.actionStatus === "Action in progress"}
+          >
+            {this.props.actionStatus === "Action in progress" ? (
+              <Fragment>
+                <span>Creating </span> <FontAwesomeIcon icon={faSpinner} spin />
+              </Fragment>
+            ) : (
+              "Create Post"
+            )}
           </button>
         </form>
       </div>

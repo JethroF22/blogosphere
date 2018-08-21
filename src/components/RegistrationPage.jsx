@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 
 import { validateRegistrationForm as validateForm } from "../utils/forms";
@@ -155,8 +157,19 @@ export class RegistrationPage extends Component {
           />
 
           <br />
-          <button type="submit" className="uk-button uk-button-default button">
-            Submit
+          <button
+            type="submit"
+            className="uk-button uk-button-default button button--form"
+            disabled={this.props.actionStatus === "Action in progress"}
+          >
+            {this.props.actionStatus === "Action in progress" ? (
+              <Fragment>
+                <span>Creating account </span>{" "}
+                <FontAwesomeIcon icon={faSpinner} spin />
+              </Fragment>
+            ) : (
+              "Create account"
+            )}
           </button>
         </form>
       </div>

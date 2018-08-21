@@ -1,5 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import Textarea from "react-textarea-autosize";
 import _ from "lodash";
 
@@ -28,6 +30,13 @@ export class EditPostPage extends Component {
           ...state
         }));
       });
+    } else {
+      this.setState(prevState => ({
+        ...prevState,
+        body: this.props.post.body,
+        title: this.props.post.title,
+        coverPhotoURL: this.props.post.coverPhotoURL
+      }));
     }
   }
 
@@ -158,8 +167,15 @@ export class EditPostPage extends Component {
           <button
             type="submit"
             className="uk-button uk-button-default button button--form"
+            disabled={this.props.actionStatus === "Action in progress"}
           >
-            Update Post
+            {this.props.actionStatus === "Action in progress" ? (
+              <Fragment>
+                <span>Updating </span> <FontAwesomeIcon icon={faSpinner} spin />
+              </Fragment>
+            ) : (
+              "Update Post"
+            )}
           </button>
         </form>
       </div>
