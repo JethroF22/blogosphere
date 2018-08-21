@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "start": "node server/server.js",
     "dev-server": "webpack-dev-server --mode development",
     "build": "webpack --mode production --config ./webpack.prod.config.js --inline --progress",
     "test-express": "cross-env NODE_ENV=test mocha server/**/*.test.js",
