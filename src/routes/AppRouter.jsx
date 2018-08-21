@@ -1,5 +1,6 @@
 import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { Router, Switch, Route } from "react-router-dom";
+import createHistory from "history/createBrowserHistory";
 
 import PrivateRoute from "./PrivateRoute";
 import HomePage from "../components/HomePage";
@@ -14,9 +15,11 @@ import ViewProfile from "../components/ViewProfile";
 import EditProfile from "../components/EditProfile";
 import Header from "../components/Header";
 
+export const history = createHistory();
+
 const AppRouter = () => {
   return (
-    <BrowserRouter>
+    <Router history={history}>
       <div>
         <Header />
         <Switch>
@@ -32,7 +35,7 @@ const AppRouter = () => {
           <Route component={Error404} />
         </Switch>
       </div>
-    </BrowserRouter>
+    </Router>
   );
 };
 
