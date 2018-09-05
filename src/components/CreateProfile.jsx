@@ -20,7 +20,7 @@ class CreateProfile extends Component {
       photo,
       errors: {
         ...prevState.errors,
-        photo: ""
+        photo
       }
     }));
   };
@@ -31,7 +31,7 @@ class CreateProfile extends Component {
       bio,
       errors: {
         ...prevState.errors,
-        bio: ""
+        bio
       }
     }));
   };
