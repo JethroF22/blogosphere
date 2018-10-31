@@ -55,7 +55,7 @@ class ViewProfile extends Component {
           <div>
             <h1 className="profile__title">
               {this.props.match.params.username}
-              {this.state.isOwnProfile ? (
+              {this.props.token && (this.state.isOwnProfile ? (
                 <Link
                   to="/profile/edit"
                   className="uk-button uk-button-default button button--profile"
@@ -63,14 +63,14 @@ class ViewProfile extends Component {
                   Edit Profile
                 </Link>
               ) : (
-                <button
-                  className="uk-button uk-button-default button button--profile"
-                  type="button"
-                  onClick={this.followAuthor}
-                >
-                  Follow
+                  <button
+                    className="uk-button uk-button-default button button--profile"
+                    type="button"
+                    onClick={this.followAuthor}
+                  >
+                    Follow
                 </button>
-              )}
+                ))}
             </h1>
             {this.props.profile.followers && (
               <p className="profile__subtitle">
@@ -139,6 +139,7 @@ class ViewProfile extends Component {
 }
 
 const mapStateToProps = state => ({
+  token: state.auth.token,
   username: state.auth.username,
   profile: state.profile,
   actionStatus: state.status.status,
